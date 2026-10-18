@@ -1,0 +1,6 @@
+{
+  "name": "HealthHub",
+  "description": "PASIT HEALTH & PERFORMANCE COMMAND CENTER (2026_HealthHub) with multimodal AI logging, energy balance tracking, and gym microcycle planning.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

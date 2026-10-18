@@ -47,10 +47,12 @@ import com.example.data.local.MealEntity
 import com.example.data.model.DailySummary
 import com.example.data.model.EnergyStatus
 import com.example.data.model.HealthConstants
+import com.example.ui.components.BoopClayLandingSection
 import com.example.ui.components.CrystalBadge
 import com.example.ui.components.CrystalButton
 import com.example.ui.components.CrystalCard
 import com.example.ui.components.CrystalPill
+import com.example.ui.theme.ChillaxRoundedDisplayFamily
 import com.example.ui.theme.CrystalIce
 import com.example.ui.theme.EmeraldMist
 import com.example.ui.theme.ObsidianCard
@@ -71,6 +73,7 @@ fun CommandScreen(
     onDeleteMeal: (id: Long) -> Unit,
     onOpenSettings: () -> Unit,
     onOpenInsights: (() -> Unit)? = null,
+    onOpenAiSnap: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val currentSummary = dailySummaries.firstOrNull() ?: DailySummary(
@@ -110,16 +113,18 @@ fun CommandScreen(
             ) {
                 Column {
                     Text(
-                        text = "PASIT HEALTH & PERFORMANCE",
+                        text = "BOOP × PASIT HEALTHHUB",
                         color = CrystalIce,
+                        fontFamily = ChillaxRoundedDisplayFamily,
                         fontSize = 11.sp,
                         fontWeight = FontWeight.Bold,
                         letterSpacing = 1.2.sp
                     )
                     Text(
-                        text = "Command Center 2026",
+                        text = "Boop Command Center",
                         color = TextPrimary,
-                        fontSize = 22.sp,
+                        fontFamily = ChillaxRoundedDisplayFamily,
+                        fontSize = 23.sp,
                         fontWeight = FontWeight.Bold
                     )
                 }
@@ -131,7 +136,7 @@ fun CommandScreen(
                             onClick = onOpenInsights,
                             isPrimary = false,
                             modifier = Modifier
-                                .height(34.dp)
+                                .height(36.dp)
                                 .padding(end = 6.dp),
                             testTag = "open_insights_button"
                         )
@@ -145,7 +150,7 @@ fun CommandScreen(
                         onClick = onOpenSettings,
                         modifier = Modifier
                             .testTag("settings_icon_button")
-                            .size(44.dp)
+                            .size(48.dp)
                     ) {
                         Icon(
                             imageVector = Icons.Default.Settings,
@@ -157,13 +162,23 @@ fun CommandScreen(
             }
         }
 
+        // Boop Dark Claymorphism Landing Hero, Phone Mockup, Floating Clay Shapes, 3 Features & Bright CTA Band
+        item {
+            BoopClayLandingSection(
+                onOpenAiSnap = onOpenAiSnap,
+                onQuickLogMeal = { showAddMealDialog = true },
+                onOpenTrends = onOpenInsights
+            )
+        }
+
         // 7 Executive KPI Cards Grid
         item {
             Text(
                 text = "EXECUTIVE TELEMETRY (TODAY)",
                 color = TextSecondary,
+                fontFamily = ChillaxRoundedDisplayFamily,
                 fontSize = 12.sp,
-                fontWeight = FontWeight.SemiBold,
+                fontWeight = FontWeight.Bold,
                 letterSpacing = 1.sp
             )
             Spacer(modifier = Modifier.height(10.dp))

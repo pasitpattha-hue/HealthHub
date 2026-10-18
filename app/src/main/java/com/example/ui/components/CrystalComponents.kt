@@ -1,8 +1,13 @@
 package com.example.ui.components
 
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -29,10 +34,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
@@ -40,9 +49,18 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.data.model.EnergyStatus
+import com.example.ui.theme.ChillaxRoundedDisplayFamily
+import com.example.ui.theme.ClayHighlightIce
+import com.example.ui.theme.ClayHighlightLight
+import com.example.ui.theme.ClayLavender
+import com.example.ui.theme.ClayPeach
+import com.example.ui.theme.ClayShadowDark
+import com.example.ui.theme.ClaySurfaceBottom
+import com.example.ui.theme.ClaySurfaceTop
 import com.example.ui.theme.CrystalIce
+import com.example.ui.theme.CrystalIceDark
 import com.example.ui.theme.EmeraldMist
-import com.example.ui.theme.ObsidianCard
+import com.example.ui.theme.OutfitBodyFamily
 import com.example.ui.theme.SmokedCrystal
 import com.example.ui.theme.SmokedCrystalElevated
 import com.example.ui.theme.SoftCoralRose
@@ -52,10 +70,15 @@ import com.example.ui.theme.TextPrimary
 import com.example.ui.theme.TextSecondary
 import com.example.ui.theme.WarmChampagne
 
+/**
+ * Dark Claymorphism Card:
+ * Puffy 3D surface gradient, big squircle radii (28.dp default), soft outer elevation,
+ * inner top-left specular cushion highlight, and inner bottom-right deep clay shadow bevel.
+ */
 @Composable
 fun CrystalCard(
     modifier: Modifier = Modifier,
-    cornerRadius: Dp = 22.dp,
+    cornerRadius: Dp = 28.dp,
     backgroundColor: Color = SmokedCrystal,
     borderColor: Color = SpecularBorder,
     topSpecularColor: Color = SpecularHighlight,
@@ -64,24 +87,53 @@ fun CrystalCard(
     content: @Composable () -> Unit
 ) {
     val shape = RoundedCornerShape(cornerRadius)
+    val topGrad = if (backgroundColor == SmokedCrystal) ClaySurfaceTop else backgroundColor.copy(alpha = 0.95f)
+    val bottomGrad = if (backgroundColor == SmokedCrystal) ClaySurfaceBottom else backgroundColor.copy(alpha = 0.82f)
+
     val cardModifier = modifier
         .then(if (testTag != null) Modifier.testTag(testTag) else Modifier)
+        .shadow(
+            elevation = 14.dp,
+            shape = shape,
+            ambientColor = Color.Black,
+            spotColor = CrystalIce.copy(alpha = 0.28f)
+        )
         .clip(shape)
-        .background(backgroundColor)
-        .border(1.dp, borderColor, shape)
-        .drawBehind {
-            // Draw specular top border reflection
-            drawLine(
-                brush = Brush.horizontalGradient(
-                    listOf(
+        .background(
+            Brush.verticalGradient(
+                colors = listOf(topGrad, bottomGrad)
+            )
+        )
+        .border(1.5.dp, borderColor, shape)
+        .drawWithContent {
+            drawContent()
+            val radiusPx = cornerRadius.toPx()
+            // Puffy inner bottom-right dark clay bevel
+            drawRoundRect(
+                brush = Brush.verticalGradient(
+                    colors = listOf(
                         Color.Transparent,
-                        topSpecularColor,
-                        Color.Transparent
-                    )
+                        ClayShadowDark.copy(alpha = 0.55f)
+                    ),
+                    startY = size.height * 0.5f,
+                    endY = size.height
                 ),
-                start = Offset(size.width * 0.1f, 1f),
-                end = Offset(size.width * 0.9f, 1f),
-                strokeWidth = 1.5f
+                cornerRadius = CornerRadius(radiusPx, radiusPx),
+                style = Stroke(width = 3.dp.toPx())
+            )
+            // Puffy inner top-left clay highlight rim
+            drawRoundRect(
+                brush = Brush.linearGradient(
+                    colors = listOf(
+                        topSpecularColor,
+                        ClayHighlightIce.copy(alpha = 0.25f),
+                        Color.Transparent
+                    ),
+                    start = Offset(0f, 0f),
+                    end = Offset(size.width * 0.7f, size.height * 0.5f)
+                ),
+                cornerRadius = CornerRadius(radiusPx, radiusPx),
+                style = Stroke(width = 2.dp.toPx())
             )
         }
         .then(
@@ -106,25 +158,26 @@ fun CrystalBadge(
 ) {
     val (bgGradient, textCol) = when (status) {
         EnergyStatus.DEFICIT -> Pair(
-            listOf(EmeraldMist.copy(alpha = 0.25f), EmeraldMist.copy(alpha = 0.08f)),
+            listOf(EmeraldMist.copy(alpha = 0.34f), EmeraldMist.copy(alpha = 0.14f)),
             EmeraldMist
         )
         EnergyStatus.MAINTENANCE -> Pair(
-            listOf(WarmChampagne.copy(alpha = 0.25f), WarmChampagne.copy(alpha = 0.08f)),
+            listOf(WarmChampagne.copy(alpha = 0.34f), WarmChampagne.copy(alpha = 0.14f)),
             WarmChampagne
         )
         EnergyStatus.SURPLUS -> Pair(
-            listOf(SoftCoralRose.copy(alpha = 0.25f), SoftCoralRose.copy(alpha = 0.08f)),
+            listOf(SoftCoralRose.copy(alpha = 0.34f), SoftCoralRose.copy(alpha = 0.14f)),
             SoftCoralRose
         )
     }
 
     Row(
         modifier = modifier
-            .clip(RoundedCornerShape(30.dp))
-            .background(Brush.horizontalGradient(bgGradient))
-            .border(1.dp, textCol.copy(alpha = 0.4f), RoundedCornerShape(30.dp))
-            .padding(horizontal = 12.dp, vertical = 6.dp),
+            .shadow(6.dp, RoundedCornerShape(50), spotColor = textCol.copy(alpha = 0.4f))
+            .clip(RoundedCornerShape(50))
+            .background(Brush.verticalGradient(bgGradient))
+            .border(1.5.dp, textCol.copy(alpha = 0.5f), RoundedCornerShape(50))
+            .padding(horizontal = 14.dp, vertical = 7.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
@@ -135,6 +188,7 @@ fun CrystalBadge(
         Text(
             text = status.labelTh,
             color = textCol,
+            fontFamily = ChillaxRoundedDisplayFamily,
             fontWeight = FontWeight.Bold,
             fontSize = 12.sp
         )
@@ -149,16 +203,24 @@ fun CrystalPill(
 ) {
     Box(
         modifier = modifier
-            .clip(RoundedCornerShape(20.dp))
-            .background(accentColor.copy(alpha = 0.15f))
-            .border(1.dp, accentColor.copy(alpha = 0.35f), RoundedCornerShape(20.dp))
-            .padding(horizontal = 10.dp, vertical = 4.dp),
+            .clip(RoundedCornerShape(50))
+            .background(
+                Brush.verticalGradient(
+                    listOf(
+                        accentColor.copy(alpha = 0.26f),
+                        accentColor.copy(alpha = 0.12f)
+                    )
+                )
+            )
+            .border(1.dp, accentColor.copy(alpha = 0.45f), RoundedCornerShape(50))
+            .padding(horizontal = 11.dp, vertical = 4.dp),
         contentAlignment = Alignment.Center
     ) {
         Text(
             text = text,
             color = accentColor,
-            fontWeight = FontWeight.SemiBold,
+            fontFamily = ChillaxRoundedDisplayFamily,
+            fontWeight = FontWeight.Bold,
             fontSize = 11.sp
         )
     }
@@ -174,22 +236,54 @@ fun CrystalButton(
     enabled: Boolean = true,
     testTag: String = "crystal_button"
 ) {
+    val shape = RoundedCornerShape(22.dp)
     val bgBrush = if (isPrimary) {
-        Brush.horizontalGradient(listOf(CrystalIce, Color(0xFF38BDF8)))
+        Brush.verticalGradient(
+            listOf(
+                Color(0xFF93E2FE),
+                CrystalIce,
+                CrystalIceDark
+            )
+        )
     } else {
-        Brush.horizontalGradient(listOf(SmokedCrystalElevated, SmokedCrystal))
+        Brush.verticalGradient(
+            listOf(
+                SmokedCrystalElevated,
+                ClaySurfaceBottom
+            )
+        )
     }
 
-    val contentColor = if (isPrimary) Color(0xFF070A12) else TextPrimary
-    val borderCol = if (isPrimary) CrystalIce.copy(alpha = 0.6f) else SpecularBorder
+    val contentColor = if (isPrimary) Color(0xFF06101E) else TextPrimary
+    val borderCol = if (isPrimary) Color.White.copy(alpha = 0.55f) else SpecularBorder
 
     Box(
         modifier = modifier
             .testTag(testTag)
             .height(48.dp) // Minimum 48.dp interactive target
-            .clip(RoundedCornerShape(14.dp))
+            .shadow(
+                elevation = if (isPrimary) 10.dp else 6.dp,
+                shape = shape,
+                ambientColor = Color.Black,
+                spotColor = if (isPrimary) CrystalIce else Color.Black
+            )
+            .clip(shape)
             .background(bgBrush)
-            .border(1.dp, borderCol, RoundedCornerShape(14.dp))
+            .border(1.5.dp, borderCol, shape)
+            .drawWithContent {
+                drawContent()
+                val r = 22.dp.toPx()
+                // Inner top puffy highlight
+                drawRoundRect(
+                    brush = Brush.verticalGradient(
+                        listOf(ClayHighlightLight, Color.Transparent),
+                        startY = 0f,
+                        endY = size.height * 0.45f
+                    ),
+                    cornerRadius = CornerRadius(r, r),
+                    style = Stroke(width = 2.dp.toPx())
+                )
+            }
             .clickable(
                 enabled = enabled,
                 interactionSource = remember { MutableInteractionSource() },
@@ -215,10 +309,53 @@ fun CrystalButton(
             Text(
                 text = text,
                 color = contentColor,
+                fontFamily = ChillaxRoundedDisplayFamily,
                 fontWeight = FontWeight.Bold,
                 fontSize = 14.sp
             )
         }
+    }
+}
+
+/**
+ * Floating 3D Clay Orb / Pill Canvas Decoration for the Hero & CTA sections.
+ * Draws a puffy 3D sphere or capsule with radial specular highlight and deep clay shading.
+ */
+@Composable
+fun FloatingClayOrb(
+    baseColor: Color,
+    sizeDp: Dp,
+    modifier: Modifier = Modifier
+) {
+    Canvas(modifier = modifier.size(sizeDp)) {
+        val radius = size.minDimension / 2f
+        // Outer soft clay body
+        drawCircle(
+            brush = Brush.radialGradient(
+                colors = listOf(
+                    Color.White.copy(alpha = 0.85f),
+                    baseColor,
+                    baseColor.copy(alpha = 0.7f),
+                    Color(0xFF060A14)
+                ),
+                center = Offset(size.width * 0.32f, size.height * 0.28f),
+                radius = radius * 1.35f
+            ),
+            radius = radius
+        )
+        // Puffy top-left specular gleam
+        drawCircle(
+            brush = Brush.radialGradient(
+                colors = listOf(
+                    Color.White.copy(alpha = 0.65f),
+                    Color.Transparent
+                ),
+                center = Offset(size.width * 0.30f, size.height * 0.26f),
+                radius = radius * 0.45f
+            ),
+            radius = radius * 0.45f,
+            center = Offset(size.width * 0.30f, size.height * 0.26f)
+        )
     }
 }
 
@@ -242,31 +379,46 @@ fun CrystalFloatingBottomBar(
             .padding(horizontal = 16.dp, vertical = 10.dp),
         contentAlignment = Alignment.Center
     ) {
-        // Smoked Crystal Floating Pill
+        // Puffy Dark Clay Floating Dock with big radii (34.dp)
         Row(
             modifier = Modifier
-                .clip(RoundedCornerShape(28.dp))
-                .background(Color(0xE60F172A))
-                .border(1.dp, SpecularBorder, RoundedCornerShape(28.dp))
-                .drawBehind {
-                    // Top specular glow
-                    drawLine(
-                        brush = Brush.horizontalGradient(
-                            listOf(Color.Transparent, CrystalIce.copy(alpha = 0.3f), Color.Transparent)
+                .shadow(
+                    elevation = 18.dp,
+                    shape = RoundedCornerShape(34.dp),
+                    ambientColor = Color.Black,
+                    spotColor = CrystalIce.copy(alpha = 0.35f)
+                )
+                .clip(RoundedCornerShape(34.dp))
+                .background(
+                    Brush.verticalGradient(
+                        listOf(
+                            Color(0xF21E2B48),
+                            Color(0xF50F172A)
+                        )
+                    )
+                )
+                .border(1.5.dp, SpecularBorder, RoundedCornerShape(34.dp))
+                .drawWithContent {
+                    drawContent()
+                    val r = 34.dp.toPx()
+                    drawRoundRect(
+                        brush = Brush.verticalGradient(
+                            listOf(ClayHighlightLight, Color.Transparent),
+                            startY = 0f,
+                            endY = size.height * 0.4f
                         ),
-                        start = Offset(size.width * 0.15f, 0f),
-                        end = Offset(size.width * 0.85f, 0f),
-                        strokeWidth = 2f
+                        cornerRadius = CornerRadius(r, r),
+                        style = Stroke(width = 2.dp.toPx())
                     )
                 }
-                .padding(horizontal = 8.dp, vertical = 6.dp),
+                .padding(horizontal = 10.dp, vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceAround
         ) {
             items.forEachIndexed { index, item ->
                 val isSelected = index == selectedIndex
                 val activeBgColor by animateColorAsState(
-                    targetValue = if (isSelected) CrystalIce.copy(alpha = 0.2f) else Color.Transparent,
+                    targetValue = if (isSelected) CrystalIce.copy(alpha = 0.24f) else Color.Transparent,
                     animationSpec = tween(250), label = "tab_bg"
                 )
                 val activeTextColor by animateColorAsState(
@@ -277,8 +429,17 @@ fun CrystalFloatingBottomBar(
                 Box(
                     modifier = Modifier
                         .testTag(item.testTag)
-                        .clip(RoundedCornerShape(20.dp))
+                        .clip(RoundedCornerShape(24.dp))
                         .background(activeBgColor)
+                        .then(
+                            if (isSelected) {
+                                Modifier.border(
+                                    1.dp,
+                                    CrystalIce.copy(alpha = 0.45f),
+                                    RoundedCornerShape(24.dp)
+                                )
+                            } else Modifier
+                        )
                         .clickable(
                             interactionSource = remember { MutableInteractionSource() },
                             indication = ripple(color = CrystalIce),
@@ -299,8 +460,9 @@ fun CrystalFloatingBottomBar(
                         Text(
                             text = item.title,
                             color = activeTextColor,
+                            fontFamily = ChillaxRoundedDisplayFamily,
                             fontSize = 11.sp,
-                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
+                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium
                         )
                     }
                 }

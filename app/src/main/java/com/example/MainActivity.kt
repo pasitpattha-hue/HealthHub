@@ -166,7 +166,8 @@ fun HealthHubApp(
                         },
                         onDeleteMeal = { id -> viewModel.deleteMeal(id) },
                         onOpenSettings = { viewModel.openSettingsDialog() },
-                        onOpenInsights = { showInsightsModal = true }
+                        onOpenInsights = { showInsightsModal = true },
+                        onOpenAiSnap = { viewModel.selectTab(1) }
                     )
 
                     1 -> AiSnapScreen(

@@ -238,4 +238,27 @@ class HealthHubRepository(
         val url = getGasWebhookUrl()
         return gasService.syncDataToGas(url, payload)
     }
+
+    suspend fun syncPendingOfflineRecords(): Int {
+        val unsyncedNutrition = dao.getUnsyncedNutrition()
+        var syncedCount = 0
+        for (item in unsyncedNutrition) {
+            val result = syncWithGas("LOG_MEAL", JSONObject().apply {
+                put("action", "LOG_MEAL")
+                put("id", item.id)
+                put("date", item.date)
+                put("name", item.name)
+                put("calories", item.calories)
+                put("proteinG", item.proteinG)
+                put("carbsG", item.carbsG)
+                put("fatG", item.fatG)
+                put("sodiumMg", item.sodiumMg)
+            })
+            if (result.isSuccess) {
+                dao.markNutritionSynced(item.id)
+                syncedCount++
+            }
+        }
+        return syncedCount
+    }
 }

@@ -7,15 +7,15 @@ import androidx.room.RoomDatabase
 
 @Database(
     entities = [
-        MealEntity::class,
+        DailyLogEntity::class,
+        NutritionEntryEntity::class,
+        MicrocycleWorkoutEntity::class,
         WorkoutEntity::class,
         BodyCompEntity::class,
         SleepEntity::class,
-        GymExerciseEntity::class,
-        DailySummaryEntity::class,
         SettingEntity::class
     ],
-    version = 2,
+    version = 3,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {

@@ -179,6 +179,9 @@ class GeminiService {
         .build()
 
     private fun resolveGeminiApiKey(): String {
+        if (android.os.Build.FINGERPRINT.equals("robolectric", ignoreCase = true)) {
+            return ""
+        }
         val fromBuildConfig = runCatching {
             BuildConfig::class.java.getDeclaredField("GEMINI_API_KEY").get(null) as? String
         }.getOrNull().orEmpty()

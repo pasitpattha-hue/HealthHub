@@ -19,11 +19,10 @@ captures/
 .externalNativeBuild/
 .cxx/
 
-# Generated APKs, AABs & Keystores
+# Generated APKs, AABs & Production Keystores (keep debug.keystore tracked for debug signing)
 *.apk
 *.ap_
 *.aab
 *.dex
 *.class
-debug.keystore
 my-upload-key.jks

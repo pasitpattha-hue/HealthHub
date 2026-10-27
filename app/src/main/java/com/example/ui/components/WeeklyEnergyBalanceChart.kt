@@ -28,13 +28,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.TrendingDown
-import androidx.compose.material.icons.filled.TrendingUp
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -225,11 +219,12 @@ fun WeeklyEnergyBalanceChart(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
-                        Icon(
-                            imageVector = if (cumulativeNet < 0) Icons.Default.TrendingDown else Icons.Default.TrendingUp,
-                            contentDescription = "Trend",
-                            tint = if (cumulativeNet < 0) EmeraldMist else WarmChampagne,
-                            modifier = Modifier.size(14.dp)
+                        Text(
+                            text = if (cumulativeNet < 0) "↘" else "↗",
+                            color = if (cumulativeNet < 0) EmeraldMist else WarmChampagne,
+                            fontFamily = ChillaxRoundedDisplayFamily,
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Bold
                         )
                         val sign = if (cumulativeNet > 0) "+" else ""
                         Text(

@@ -5,7 +5,7 @@ Executive Metabolic, Nutritional & Biomechanical Command Center for Android (Jet
 ## 🛠️ Build Toolchain & Plugin Versions (Latest 2026 Stack)
 | Component | Version |
 | :--- | :--- |
-| **Gradle** | `9.3.1` (`gradle/wrapper/gradle-wrapper.properties`) |
+| **Gradle** | `9.8.0` (`gradle/wrapper/gradle-wrapper.properties`) |
 | **Android Gradle Plugin (AGP)** | `9.1.1` (`com.android.application`) |
 | **Kotlin / Compose Compiler Plugin** | `2.2.10` (`org.jetbrains.kotlin.plugin.compose`) |
 | **Google DevTools KSP** | `2.3.5` (`com.google.devtools.ksp`) |

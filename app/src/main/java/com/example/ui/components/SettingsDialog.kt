@@ -6,11 +6,15 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.material3.AlertDialog
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.BasicAlertDialog
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -21,88 +25,84 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.data.model.HealthConstants
+import com.example.ui.theme.ChillaxRoundedDisplayFamily
 import com.example.ui.theme.CrystalIce
-import com.example.ui.theme.EmeraldMist
 import com.example.ui.theme.ObsidianCard
-import com.example.ui.theme.SpecularBorder
 import com.example.ui.theme.TextPrimary
 import com.example.ui.theme.TextSecondary
-import com.example.ui.theme.TextTertiary
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsDialog(
     currentWebhookUrl: String,
     onSaveUrl: (String) -> Unit,
     onDismiss: () -> Unit
 ) {
-    var urlText by remember { mutableStateOf(currentWebhookUrl) }
+    var urlInput by remember { mutableStateOf(currentWebhookUrl) }
 
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = {
-            Text(
-                text = "Command Center Settings",
-                color = TextPrimary,
-                fontWeight = FontWeight.Bold,
-                fontSize = 18.sp
-            )
-        },
-        text = {
-            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+    BasicAlertDialog(onDismissRequest = onDismiss) {
+        Surface(
+            shape = RoundedCornerShape(28.dp),
+            color = ObsidianCard,
+            modifier = Modifier.imePadding()
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(20.dp)
+            ) {
                 Text(
-                    text = "Google Apps Script Web App URL (2026_HealthHub)",
+                    text = "⚙️ GAS v4.0 Webhook Config",
                     color = CrystalIce,
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 13.sp
+                    fontFamily = ChillaxRoundedDisplayFamily,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp
                 )
+                Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "Incoming health logs (meals, workouts, bodycomp, sleep) will sync automatically via HTTP POST to this endpoint.",
-                    color = TextTertiary,
-                    fontSize = 11.sp
+                    text = "Configure your Google Apps Script Web App URL for 2026_HealthHub Google Sheets sync.",
+                    color = TextSecondary,
+                    fontSize = 12.sp
                 )
-
+                Spacer(modifier = Modifier.height(14.dp))
                 OutlinedTextField(
-                    value = urlText,
-                    onValueChange = { urlText = it },
-                    label = { Text("GAS Web App URL") },
+                    value = urlInput,
+                    onValueChange = { urlInput = it },
+                    label = { Text("GAS Web App URL", color = TextSecondary) },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .testTag("gas_url_input"),
+                        .testTag("gas_webhook_url_input"),
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = CrystalIce,
-                        unfocusedBorderColor = SpecularBorder,
                         focusedTextColor = TextPrimary,
-                        unfocusedTextColor = TextPrimary
+                        unfocusedTextColor = TextPrimary,
+                        focusedBorderColor = CrystalIce,
+                        unfocusedBorderColor = TextSecondary
                     )
                 )
-
-                Spacer(modifier = Modifier.height(4.dp))
-                Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
-                    CrystalPill("Local DB: Room SQLite", EmeraldMist)
-                    CrystalPill("GAS v4.0 Match: Active", CrystalIce)
+                Spacer(modifier = Modifier.height(16.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    CrystalButton(
+                        text = "Cancel",
+                        onClick = onDismiss,
+                        isPrimary = false,
+                        modifier = Modifier.weight(1f),
+                        testTag = "settings_cancel_button"
+                    )
+                    CrystalButton(
+                        text = "Save Endpoint",
+                        onClick = {
+                            onSaveUrl(urlInput)
+                            onDismiss()
+                        },
+                        isPrimary = true,
+                        modifier = Modifier.weight(1f),
+                        testTag = "settings_save_button"
+                    )
                 }
-
-                Text(
-                    text = "Reset to Default: ${HealthConstants.DEFAULT_GAS_URL}",
-                    color = TextTertiary,
-                    fontSize = 10.sp
-                )
             }
-        },
-        confirmButton = {
-            TextButton(
-                onClick = { onSaveUrl(urlText) },
-                modifier = Modifier.testTag("save_settings_button")
-            ) {
-                Text("Save Endpoint", color = CrystalIce, fontWeight = FontWeight.Bold)
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text("Cancel", color = TextSecondary)
-            }
-        },
-        containerColor = ObsidianCard
-    )
+        }
+    }
 }

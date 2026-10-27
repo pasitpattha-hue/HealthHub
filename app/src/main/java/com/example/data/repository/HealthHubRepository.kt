@@ -2,18 +2,20 @@ package com.example.data.repository
 
 import com.example.data.local.AppDatabase
 import com.example.data.local.BodyCompEntity
+import com.example.data.local.DailyLogDao
 import com.example.data.local.DailySummaryEntity
 import com.example.data.local.GymExerciseEntity
+import com.example.data.local.HealthDao
 import com.example.data.local.MealEntity
+import com.example.data.local.NutritionDao
 import com.example.data.local.SeedData
 import com.example.data.local.SettingEntity
 import com.example.data.local.SleepEntity
+import com.example.data.local.WorkoutDao
 import com.example.data.local.WorkoutEntity
 import com.example.data.model.DailySummary
 import com.example.data.model.DeviceSource
-import com.example.data.model.HealthConstants
 import com.example.data.remote.GoogleAppsScriptService
-import com.example.data.remote.SyncResult
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -21,30 +23,34 @@ import org.json.JSONObject
 
 class HealthHubRepository(
     private val database: AppDatabase,
+    private val dailyLogDao: DailyLogDao = database.dailyLogDao(),
+    private val nutritionDao: NutritionDao = database.nutritionDao(),
+    private val workoutDao: WorkoutDao = database.workoutDao(),
+    private val healthDao: HealthDao = database.healthDao(),
     private val gasService: GoogleAppsScriptService = GoogleAppsScriptService()
 ) {
-    private val dao = database.healthDao()
 
-    suspend fun initializeDatabaseIfEmpty() {
-        val summaries = dao.getRecentDailySummaries().first()
-        val hasLatestData = summaries.any { it.date == "2026-10-18" }
-        if (summaries.isEmpty() || !hasLatestData) {
-            dao.insertDailySummaries(SeedData.initialDailySummaries)
-            dao.insertMeals(SeedData.initialMeals)
-            dao.insertWorkouts(SeedData.initialWorkouts)
-            dao.insertBodyComps(SeedData.initialBodyComp)
-            dao.insertSleepRecords(SeedData.initialSleep)
-            dao.insertGymExercises(SeedData.initialGymExercises)
-            for (setting in SeedData.initialSettings) {
-                dao.setSetting(setting)
-            }
+    suspend fun ensureSeeded() {
+        val summaries = dailyLogDao.getRecentDailyLogs().first()
+        val hasLatestSheetDate = summaries.any { it.date == "2026-10-23" }
+        if (summaries.isEmpty() || !hasLatestSheetDate) {
+            dailyLogDao.upsertDailyLogs(SeedData.initialDailySummaries)
+            nutritionDao.insertNutritionEntries(SeedData.initialMeals)
+            workoutDao.insertMicrocycleWorkouts(SeedData.initialGymExercises)
+            workoutDao.insertWorkouts(SeedData.initialWorkouts)
+            healthDao.insertBodyComps(SeedData.initialBodyComp)
+            healthDao.insertSleeps(SeedData.initialSleep)
         }
     }
 
-    // Daily Summaries
     fun getRecentSummaries(): Flow<List<DailySummary>> {
-        return dao.getRecentDailySummaries().map { entities ->
+        return dailyLogDao.getRecentDailyLogs().map { entities ->
             entities.map { entity ->
+                val source = when {
+                    entity.weightSource.contains("Visbody", ignoreCase = true) -> DeviceSource.VISBODY_3D
+                    entity.weightSource.contains("Evolt", ignoreCase = true) -> DeviceSource.EVOLT_360
+                    else -> DeviceSource.HUAWEI_SCALE
+                }
                 DailySummary(
                     date = entity.date,
                     intakeKcal = entity.intakeKcal,
@@ -55,210 +61,174 @@ class HealthHubRepository(
                     activeBurnKcal = entity.activeBurnKcal,
                     workoutTitle = entity.workoutTitle,
                     weightKg = entity.weightKg,
-                    weightSource = when (entity.weightSource) {
-                        "Visbody 3D" -> DeviceSource.VISBODY_3D
-                        "Evolt 360" -> DeviceSource.EVOLT_360
-                        else -> DeviceSource.HUAWEI_SCALE
-                    },
+                    weightSource = source,
                     smmKg = entity.smmKg,
                     bodyFatPct = entity.bodyFatPct,
                     aptCm = entity.aptCm,
                     sleepHrvMs = entity.sleepHrvMs,
-                    sleepScore = entity.sleepScore
+                    sleepScore = entity.sleepScore,
+                    sugarG = entity.sugarG
                 )
             }
         }
     }
 
-    // Meals
-    fun getMealsForDate(date: String): Flow<List<MealEntity>> = dao.getMealsForDate(date)
+    fun getMealsForDate(date: String): Flow<List<MealEntity>> =
+        nutritionDao.getNutritionEntriesForDate(date)
 
-    suspend fun addMeal(meal: MealEntity): Long {
-        val id = dao.insertMeal(meal)
+    fun getAllMeals(): Flow<List<MealEntity>> =
+        nutritionDao.getAllNutritionEntries()
+
+    fun getAllWorkouts(): Flow<List<WorkoutEntity>> =
+        workoutDao.getAllWorkouts()
+
+    fun getAllBodyComp(): Flow<List<BodyCompEntity>> =
+        healthDao.getAllBodyComp()
+
+    fun getAllSleep(): Flow<List<SleepEntity>> =
+        healthDao.getAllSleep()
+
+    fun getGymExercisesForDay(dayCode: String): Flow<List<GymExerciseEntity>> =
+        workoutDao.getMicrocycleWorkoutsForDay(dayCode)
+
+    suspend fun addMealAndRecalculate(meal: MealEntity) {
+        nutritionDao.insertNutritionEntry(meal)
         recalculateDailySummary(meal.date)
-        syncWithGas("LOG_MEAL", JSONObject().apply {
-            put("action", "LOG_MEAL")
-            put("date", meal.date)
-            put("mealType", meal.mealType)
-            put("name", meal.name)
-            put("calories", meal.calories)
-            put("proteinG", meal.proteinG)
-            put("carbsG", meal.carbsG)
-            put("fatG", meal.fatG)
-            put("sodiumMg", meal.sodiumMg)
-        })
-        return id
     }
 
-    suspend fun deleteMeal(id: Long, date: String) {
-        dao.deleteMeal(id)
+    suspend fun deleteMealAndRecalculate(id: Long, date: String) {
+        nutritionDao.deleteNutritionEntryById(id)
         recalculateDailySummary(date)
     }
 
-    // Workouts
-    fun getAllWorkouts(): Flow<List<WorkoutEntity>> = dao.getAllWorkouts()
-
-    suspend fun addWorkout(workout: WorkoutEntity): Long {
-        val id = dao.insertWorkout(workout)
+    suspend fun addWorkoutAndRecalculate(workout: WorkoutEntity) {
+        workoutDao.insertWorkout(workout)
         recalculateDailySummary(workout.date)
-        syncWithGas("LOG_WORKOUT", JSONObject().apply {
-            put("action", "LOG_WORKOUT")
-            put("date", workout.date)
-            put("title", workout.title)
-            put("category", workout.category)
-            put("activeKcal", workout.activeKcal)
-            put("durationMin", workout.durationMin)
-            put("distanceKm", workout.distanceKm)
-            put("avgHr", workout.avgHr)
-            put("elevationDPlus", workout.elevationDPlus)
-            put("cadence", workout.cadence)
-            put("gctMs", workout.gctMs)
-        })
-        return id
     }
 
-    // Body Composition
-    fun getAllBodyComp(): Flow<List<BodyCompEntity>> = dao.getAllBodyComp()
-
-    suspend fun addBodyComp(bodyComp: BodyCompEntity): Long {
-        val id = dao.insertBodyComp(bodyComp)
-        val currentSummary = dao.getDailySummary(bodyComp.date)
-        if (currentSummary != null) {
-            dao.insertDailySummary(
-                currentSummary.copy(
-                    weightKg = bodyComp.weightKg,
-                    weightSource = bodyComp.source,
-                    smmKg = bodyComp.smmKg,
-                    bodyFatPct = bodyComp.bodyFatPct,
-                    aptCm = bodyComp.aptCm
-                )
+    suspend fun addBodyCompAndRecalculate(bodyComp: BodyCompEntity) {
+        healthDao.insertBodyComp(bodyComp)
+        val existing = dailyLogDao.getDailyLogByDate(bodyComp.date) ?: SeedData.initialDailySummaries.first().copy(date = bodyComp.date)
+        dailyLogDao.upsertDailyLog(
+            existing.copy(
+                weightKg = bodyComp.weightKg,
+                weightSource = bodyComp.sourceDevice,
+                bodyFatPct = bodyComp.bodyFatPct,
+                smmKg = bodyComp.smmKg,
+                aptCm = bodyComp.aptCm,
+                updatedAt = System.currentTimeMillis()
             )
-        }
-        syncWithGas("LOG_BODYCOMP", JSONObject().apply {
-            put("action", "LOG_BODYCOMP")
-            put("date", bodyComp.date)
-            put("source", bodyComp.source)
-            put("weightKg", bodyComp.weightKg)
-            put("bodyFatPct", bodyComp.bodyFatPct)
-            put("smmKg", bodyComp.smmKg)
-            put("waterPct", bodyComp.waterPct)
-            put("aptCm", bodyComp.aptCm)
-            put("visceralFat", bodyComp.visceralFat)
-        })
-        return id
+        )
     }
 
-    // Sleep
-    fun getAllSleepRecords(): Flow<List<SleepEntity>> = dao.getAllSleepRecords()
-
-    suspend fun addSleep(sleep: SleepEntity): Long {
-        val id = dao.insertSleep(sleep)
-        val currentSummary = dao.getDailySummary(sleep.date)
-        if (currentSummary != null) {
-            dao.insertDailySummary(
-                currentSummary.copy(
-                    sleepHrvMs = sleep.avgHrvMs,
-                    sleepScore = sleep.score
-                )
+    suspend fun addSleepAndRecalculate(sleep: SleepEntity) {
+        healthDao.insertSleep(sleep)
+        val existing = dailyLogDao.getDailyLogByDate(sleep.date) ?: SeedData.initialDailySummaries.first().copy(date = sleep.date)
+        dailyLogDao.upsertDailyLog(
+            existing.copy(
+                sleepHrvMs = sleep.avgHrvMs,
+                sleepScore = sleep.sleepScore,
+                updatedAt = System.currentTimeMillis()
             )
+        )
+    }
+
+    suspend fun toggleGymExercise(exercise: GymExerciseEntity) {
+        val nextCompleted = !exercise.isCompleted
+        val nextSets = if (nextCompleted) exercise.totalSets else 0
+        workoutDao.updateMicrocycleWorkout(
+            exercise.copy(
+                isCompleted = nextCompleted,
+                completedSets = nextSets
+            )
+        )
+    }
+
+    suspend fun updateGymSetCount(exercise: GymExerciseEntity, completedSets: Int) {
+        val clamped = completedSets.coerceIn(0, exercise.totalSets)
+        workoutDao.updateMicrocycleWorkout(
+            exercise.copy(
+                completedSets = clamped,
+                isCompleted = clamped >= exercise.totalSets
+            )
+        )
+    }
+
+    suspend fun getGasWebhookUrl(defaultUrl: String): String {
+        return healthDao.getSetting("gas_webhook_url") ?: defaultUrl
+    }
+
+    suspend fun saveGasWebhookUrl(url: String) {
+        healthDao.setSetting(SettingEntity("gas_webhook_url", url))
+    }
+
+    suspend fun getSetting(key: String): String? {
+        return healthDao.getSetting(key)
+    }
+
+    suspend fun saveSetting(key: String, value: String) {
+        healthDao.setSetting(SettingEntity(key, value))
+    }
+
+    suspend fun syncToGoogleSheets(webhookUrl: String, category: String, title: String, details: Map<String, Any>): Boolean {
+        val json = JSONObject().apply {
+            put("category", category)
+            put("title", title)
+            put("timestamp", System.currentTimeMillis())
+            details.forEach { (k, v) -> put(k, v) }
         }
-        syncWithGas("LOG_SLEEP", JSONObject().apply {
-            put("action", "LOG_SLEEP")
-            put("date", sleep.date)
-            put("durationHours", sleep.durationHours)
-            put("score", sleep.score)
-            put("deepSleepPct", sleep.deepSleepPct)
-            put("avgHr", sleep.avgHr)
-            put("avgHrvMs", sleep.avgHrvMs)
-        })
-        return id
+        return gasService.syncPayloadToGas(webhookUrl, json)
     }
 
-    // Gym Exercises
-    fun getGymExercisesForDay(dayCode: String): Flow<List<GymExerciseEntity>> =
-        dao.getGymExercisesForDay(dayCode)
+    suspend fun syncDailyCaloricExpenditureFromHealthConnect(
+        date: String,
+        activeBurnKcal: Int,
+        totalBurnKcal: Int,
+        isFromSystemHealthConnect: Boolean
+    ) {
+        val existing = dailyLogDao.getDailyLogByDate(date)
+            ?: SeedData.initialDailySummaries.firstOrNull { it.date == date }
+            ?: SeedData.initialDailySummaries.first().copy(date = date)
 
-    suspend fun updateGymExercise(exercise: GymExerciseEntity) {
-        dao.updateGymExercise(exercise)
-    }
+        val resolvedActiveBurn = if (isFromSystemHealthConnect && activeBurnKcal >= 0) {
+            activeBurnKcal
+        } else {
+            existing.activeBurnKcal
+        }
 
-    // Settings
-    suspend fun getGasWebhookUrl(): String {
-        return dao.getSetting("gas_webhook_url") ?: HealthConstants.DEFAULT_GAS_URL
-    }
-
-    suspend fun setGasWebhookUrl(url: String) {
-        dao.setSetting(SettingEntity("gas_webhook_url", url))
+        dailyLogDao.upsertDailyLog(
+            existing.copy(
+                activeBurnKcal = resolvedActiveBurn,
+                updatedAt = System.currentTimeMillis()
+            )
+        )
     }
 
     private suspend fun recalculateDailySummary(date: String) {
-        val meals = dao.getMealsForDate(date).first()
-        val workouts = dao.getWorkoutsForDate(date).first()
-        val currentSummary = dao.getDailySummary(date)
+        val meals = nutritionDao.getNutritionEntriesForDate(date).first()
+        val workouts = workoutDao.getWorkoutsForDate(date).first()
+        val existing = dailyLogDao.getDailyLogByDate(date) ?: SeedData.initialDailySummaries.first().copy(date = date)
 
-        val totalCalories = meals.sumOf { it.calories }
-        val totalCarbs = meals.sumOf { it.carbsG }.toInt()
-        val totalFat = meals.sumOf { it.fatG }.toInt()
-        val totalProtein = meals.sumOf { it.proteinG }.toInt()
-        val totalSodium = meals.sumOf { it.sodiumMg }
+        val totalCal = meals.sumOf { it.calories }
+        val totalP = meals.sumOf { it.proteinG }.toInt()
+        val totalC = meals.sumOf { it.carbsG }.toInt()
+        val totalF = meals.sumOf { it.fatG }.toInt()
+        val totalNa = meals.sumOf { it.sodiumMg }
 
-        val totalActiveBurn = workouts.sumOf { it.activeKcal }
-        val topWorkoutTitle = workouts.firstOrNull()?.title ?: (currentSummary?.workoutTitle ?: "Active Day")
+        val totalBurn = if (workouts.isNotEmpty()) workouts.sumOf { it.activeBurnKcal } else existing.activeBurnKcal
+        val workoutLabel = workouts.firstOrNull()?.title ?: existing.workoutTitle
 
-        val updated = currentSummary?.copy(
-            intakeKcal = totalCalories,
-            carbsG = totalCarbs,
-            fatG = totalFat,
-            proteinG = totalProtein,
-            sodiumMg = totalSodium,
-            activeBurnKcal = totalActiveBurn,
-            workoutTitle = topWorkoutTitle
-        ) ?: DailySummaryEntity(
-            date = date,
-            intakeKcal = totalCalories,
-            carbsG = totalCarbs,
-            fatG = totalFat,
-            proteinG = totalProtein,
-            sodiumMg = totalSodium,
-            activeBurnKcal = totalActiveBurn,
-            workoutTitle = topWorkoutTitle,
-            weightKg = 68.4,
-            weightSource = "Huawei Scale",
-            smmKg = 32.8,
-            bodyFatPct = 13.8,
-            aptCm = 11.7,
-            sleepHrvMs = 84,
-            sleepScore = 85
+        dailyLogDao.upsertDailyLog(
+            existing.copy(
+                intakeKcal = totalCal,
+                proteinG = totalP,
+                carbsG = totalC,
+                fatG = totalF,
+                sodiumMg = totalNa,
+                activeBurnKcal = totalBurn,
+                workoutTitle = workoutLabel,
+                updatedAt = System.currentTimeMillis()
+            )
         )
-
-        dao.insertDailySummary(updated)
-    }
-
-    suspend fun syncWithGas(actionName: String, payload: JSONObject): SyncResult {
-        val url = getGasWebhookUrl()
-        return gasService.syncDataToGas(url, payload)
-    }
-
-    suspend fun syncPendingOfflineRecords(): Int {
-        val unsyncedNutrition = dao.getUnsyncedNutrition()
-        var syncedCount = 0
-        for (item in unsyncedNutrition) {
-            val result = syncWithGas("LOG_MEAL", JSONObject().apply {
-                put("action", "LOG_MEAL")
-                put("id", item.id)
-                put("date", item.date)
-                put("name", item.name)
-                put("calories", item.calories)
-                put("proteinG", item.proteinG)
-                put("carbsG", item.carbsG)
-                put("fatG", item.fatG)
-                put("sodiumMg", item.sodiumMg)
-            })
-            if (result.isSuccess) {
-                dao.markNutritionSynced(item.id)
-                syncedCount++
-            }
-        }
-        return syncedCount
     }
 }

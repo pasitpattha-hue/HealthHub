@@ -1,6 +1,10 @@
 {
   "name": "HealthHub",
-  "description": "PASIT HEALTH & PERFORMANCE COMMAND CENTER (2026_HealthHub) with multimodal AI logging, energy balance tracking, and gym microcycle planning.",
-  "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+  "description": "Executive Metabolic & Biomechanical Command Center with Gemini 3.8 Flash Camera Meal Macro Analyzer, 7-Day Macronutrient Chart, Health Connect Sync, and Tomorrow Planner.",
+  "requestFramePermissions": [
+    "camera"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
 }

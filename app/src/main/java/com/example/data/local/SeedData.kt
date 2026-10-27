@@ -1,16 +1,110 @@
 package com.example.data.local
 
-import com.example.data.model.HealthConstants
-
+/**
+ * Seed dataset synchronized 100% with the user's attached Google Sheet:
+ * `PASIT HEALTH & PERFORMANCE COMMAND CENTER (2026_HealthHub)`
+ * Latest Update: 23/10/2026 | Reference BMR: 1608 kcal | Target Protein: >=120g/day
+ */
 object SeedData {
     val initialDailySummaries = listOf(
-        DailySummaryEntity(
+        DailyLogEntity(
+            date = "2026-10-23",
+            intakeKcal = 2030,
+            carbsG = 184,
+            fatG = 87,
+            proteinG = 89,
+            sodiumMg = 3190,
+            sugarG = 18.0,
+            activeBurnKcal = 0,
+            workoutTitle = "พัก (Rest Day)",
+            weightKg = 74.5,
+            weightSource = "Evolt 360",
+            smmKg = 32.2,
+            bodyFatPct = 22.1,
+            aptCm = 11.7,
+            sleepHrvMs = 84,
+            sleepScore = 88
+        ),
+        DailyLogEntity(
+            date = "2026-10-22",
+            intakeKcal = 2165,
+            carbsG = 205,
+            fatG = 82,
+            proteinG = 144,
+            sodiumMg = 3650,
+            sugarG = 0.0,
+            activeBurnKcal = 218,
+            workoutTitle = "Pilates",
+            weightKg = 74.5,
+            weightSource = "Evolt 360",
+            smmKg = 32.2,
+            bodyFatPct = 22.1,
+            aptCm = 11.7,
+            sleepHrvMs = 83,
+            sleepScore = 87
+        ),
+        DailyLogEntity(
+            date = "2026-10-21",
+            intakeKcal = 2635,
+            carbsG = 273,
+            fatG = 123,
+            proteinG = 115,
+            sodiumMg = 4680,
+            sugarG = 91.5,
+            activeBurnKcal = 0,
+            workoutTitle = "พัก (Rest Day)",
+            weightKg = 74.6,
+            weightSource = "Evolt 360",
+            smmKg = 32.1,
+            bodyFatPct = 22.2,
+            aptCm = 11.7,
+            sleepHrvMs = 80,
+            sleepScore = 84
+        ),
+        DailyLogEntity(
+            date = "2026-10-20",
+            intakeKcal = 2380,
+            carbsG = 262,
+            fatG = 81,
+            proteinG = 136,
+            sodiumMg = 5071,
+            sugarG = 51.0,
+            activeBurnKcal = 189,
+            workoutTitle = "Strength Training",
+            weightKg = 74.6,
+            weightSource = "Evolt 360",
+            smmKg = 32.1,
+            bodyFatPct = 22.2,
+            aptCm = 11.7,
+            sleepHrvMs = 82,
+            sleepScore = 86
+        ),
+        DailyLogEntity(
+            date = "2026-10-19",
+            intakeKcal = 2490,
+            carbsG = 279,
+            fatG = 102,
+            proteinG = 107,
+            sodiumMg = 4190,
+            sugarG = 46.0,
+            activeBurnKcal = 514,
+            workoutTitle = "Aerobics + Strength Training",
+            weightKg = 74.6,
+            weightSource = "Visbody 3D",
+            smmKg = 32.0,
+            bodyFatPct = 22.3,
+            aptCm = 11.7,
+            sleepHrvMs = 85,
+            sleepScore = 89
+        ),
+        DailyLogEntity(
             date = "2026-10-18",
             intakeKcal = 2420,
             carbsG = 242,
             fatG = 113,
             proteinG = 103,
             sodiumMg = 3640,
+            sugarG = 0.0,
             activeBurnKcal = 0,
             workoutTitle = "พัก (Rest Day)",
             weightKg = 74.6,
@@ -19,598 +113,562 @@ object SeedData {
             bodyFatPct = 35.4,
             aptCm = 11.7,
             sleepHrvMs = 84,
-            sleepScore = 84
+            sleepScore = 85
         ),
-        DailySummaryEntity(
+        DailyLogEntity(
             date = "2026-10-17",
             intakeKcal = 3380,
             carbsG = 522,
             fatG = 98,
             proteinG = 104,
             sodiumMg = 3520,
+            sugarG = 5.0,
             activeBurnKcal = 604,
             workoutTitle = "Outdoor Run",
-            weightKg = 74.8,
-            weightSource = "Huawei Scale",
-            smmKg = 26.6,
-            bodyFatPct = 35.6,
-            aptCm = 11.7,
-            sleepHrvMs = 78,
-            sleepScore = 81
-        ),
-        DailySummaryEntity(
-            date = "2026-10-16",
-            intakeKcal = 2740,
-            carbsG = 281,
-            fatG = 129,
-            proteinG = 118,
-            sodiumMg = 3640,
-            activeBurnKcal = 1461,
-            workoutTitle = "Trail / Outdoor Run",
             weightKg = 74.7,
-            weightSource = "Huawei Scale",
-            smmKg = 26.6,
-            bodyFatPct = 35.5,
-            aptCm = 11.8,
-            sleepHrvMs = 75,
-            sleepScore = 79
-        ),
-        DailySummaryEntity(
-            date = "2026-10-15",
-            intakeKcal = 2670,
-            carbsG = 323,
-            fatG = 93,
-            proteinG = 123,
-            sodiumMg = 4205,
-            activeBurnKcal = 428,
-            workoutTitle = "Outdoor run + Pilates",
-            weightKg = 74.9,
             weightSource = "Visbody 3D",
-            smmKg = 26.8,
-            bodyFatPct = 35.7,
+            smmKg = 31.9,
+            bodyFatPct = 22.5,
             aptCm = 11.8,
-            sleepHrvMs = 91,
-            sleepScore = 90
-        ),
-        DailySummaryEntity(
-            date = "2026-10-08",
-            intakeKcal = 3025,
-            carbsG = 319,
-            fatG = 119,
-            proteinG = 150,
-            sodiumMg = 4085,
-            activeBurnKcal = 773,
-            workoutTitle = "HIIT + Yoga",
-            weightKg = 75.1,
-            weightSource = "Huawei Scale",
-            smmKg = 26.5,
-            bodyFatPct = 35.9,
-            aptCm = 12.0,
-            sleepHrvMs = 82,
+            sleepHrvMs = 81,
             sleepScore = 85
-        ),
-        DailySummaryEntity(
-            date = "2026-10-07",
-            intakeKcal = 2760,
-            carbsG = 336,
-            fatG = 110,
-            proteinG = 105,
-            sodiumMg = 4895,
-            activeBurnKcal = 691,
-            workoutTitle = "Trail / Outdoor Run",
-            weightKg = 75.3,
-            weightSource = "Visbody 3D",
-            smmKg = 26.5,
-            bodyFatPct = 36.1,
-            aptCm = 12.1,
-            sleepHrvMs = 74,
-            sleepScore = 78
-        ),
-        DailySummaryEntity(
-            date = "2026-10-06",
-            intakeKcal = 2495,
-            carbsG = 238,
-            fatG = 94,
-            proteinG = 157,
-            sodiumMg = 3720,
-            activeBurnKcal = 370,
-            workoutTitle = "Strength",
-            weightKg = 75.4,
-            weightSource = "Evolt 360",
-            smmKg = 26.4,
-            bodyFatPct = 36.2,
-            aptCm = 12.2,
-            sleepHrvMs = 80,
-            sleepScore = 82
         )
     )
 
     val initialMeals = listOf(
-        MealEntity(
-            date = "2026-10-18",
-            time = "08:30",
-            mealType = "อาหารจานหลัก",
-            name = "ข้าวกะเพราไก่ + ไข่ดาว",
-            calories = 650,
-            proteinG = 32.0,
-            carbsG = 68.0,
-            fatG = 27.0,
-            sodiumMg = 950
+        // === 23/10/2026 (Exact meals from Google Sheet 2026_HealthHub) ===
+        NutritionEntryEntity(
+            date = "2026-10-23",
+            mealType = "มื้อว่าง",
+            name = "ธัญพืชรวม KC (ไม่ใส่น้ำตาล)",
+            calories = 150,
+            proteinG = 5.0,
+            carbsG = 26.0,
+            fatG = 3.5,
+            sodiumMg = 140,
+            note = "หักซองน้ำตาลออกเรียบร้อย"
         ),
-        MealEntity(
-            date = "2026-10-18",
-            time = "12:30",
-            mealType = "อาหารจานหลัก",
-            name = "ข้าวกะเพราหมูสับ + ไข่ดาว",
-            calories = 730,
+        NutritionEntryEntity(
+            date = "2026-10-23",
+            mealType = "มื้อหลัก (เช้า/เที่ยง)",
+            name = "ข้าวผัดพริกแกงหมู + ไข่ดาว",
+            calories = 640,
+            proteinG = 25.0,
+            carbsG = 53.0,
+            fatG = 30.0,
+            sodiumMg = 750,
+            note = "ไข่ดาวทอดกรอบ"
+        ),
+        NutritionEntryEntity(
+            date = "2026-10-23",
+            mealType = "มื้อหลัก (บ่าย)",
+            name = "ข้าวมันไก่ผสม (ต้ม+ทอด)",
+            calories = 620,
             proteinG = 28.0,
+            carbsG = 60.0,
+            fatG = 25.0,
+            sodiumMg = 900,
+            note = "รวมน้ำจิ้มและน้ำซุป"
+        ),
+        NutritionEntryEntity(
+            date = "2026-10-23",
+            mealType = "มื้อหลัก (เย็น)",
+            name = "ก๋วยเตี๋ยวรวมเนื้อต้มยำหมี่เหลือง",
+            calories = 620,
+            proteinG = 31.0,
+            carbsG = 45.0,
+            fatG = 28.0,
+            sodiumMg = 1400,
+            note = "รวมเกี๊ยวกรอบและเครื่องต้มยำ"
+        ),
+
+        // === 22/10/2026 (2,165 kcal | 143.5P / 204.5C / 81.5F | Na 3,650mg | Pilates 218 kcal) ===
+        NutritionEntryEntity(
+            date = "2026-10-22",
+            mealType = "มื้อเช้า",
+            name = "เวย์โปรตีนไอโซเลท 2 สกู๊ป + ข้าวโอ๊ตไม่หวาน",
+            calories = 425,
+            proteinG = 54.0,
+            carbsG = 38.5,
+            fatG = 6.5,
+            sodiumMg = 320,
+            note = "น้ำตาล 0g ก่อนซ้อม Pilates"
+        ),
+        NutritionEntryEntity(
+            date = "2026-10-22",
+            mealType = "มื้อกลางวัน",
+            name = "สเต็กอกไก่ย่างพริกไทยดำ + ข้าวกล้อง + ไข่ต้ม 2 ฟอง",
+            calories = 720,
+            proteinG = 52.5,
             carbsG = 68.0,
-            fatG = 37.0,
-            sodiumMg = 1100
+            fatG = 26.0,
+            sodiumMg = 1180,
+            note = "โปรตีนสูงทะลุเป้า ฟื้นฟูกล้ามเนื้อแกนกลาง"
         ),
-        MealEntity(
-            date = "2026-10-18",
-            time = "15:45",
-            mealType = "ของว่าง",
-            name = "ลูกชิ้นทอด 4 ไม้ (แดง 2, หมู 2 ราดน้ำจิ้ม)",
-            calories = 360,
-            proteinG = 14.0,
-            carbsG = 36.0,
-            fatG = 18.0,
-            sodiumMg = 650
-        ),
-        MealEntity(
-            date = "2026-10-18",
-            time = "16:00",
-            mealType = "เครื่องดื่ม",
-            name = "โค้กไม่มีน้ำตาล (Coke Zero)",
-            calories = 0,
-            proteinG = 0.0,
-            carbsG = 0.0,
-            fatG = 0.0,
-            sodiumMg = 40
-        ),
-        MealEntity(
-            date = "2026-10-18",
-            time = "19:15",
-            mealType = "อาหารจานหลัก",
-            name = "ข้าวราดพริกแกงไก่ถั่วฝักยาว + ไข่เจียว",
+        NutritionEntryEntity(
+            date = "2026-10-22",
+            mealType = "มื้อเย็น",
+            name = "เกาเหลาเนื้อตุ๋นพิเศษ + ข้าวสวย",
             calories = 680,
             proteinG = 29.0,
-            carbsG = 70.0,
+            carbsG = 62.0,
+            fatG = 34.0,
+            sodiumMg = 1650,
+            note = "น้ำซุปเนื้อตุ๋นโซเดียมค่อนข้างสูง"
+        ),
+        NutritionEntryEntity(
+            date = "2026-10-22",
+            mealType = "มื้อว่าง",
+            name = "กรีกโยเกิร์ตธรรมชาติ + อัลมอนด์อบ",
+            calories = 340,
+            proteinG = 8.0,
+            carbsG = 36.0,
+            fatG = 15.0,
+            sodiumMg = 500,
+            note = "สูตรไม่เติมน้ำตาล (Sugar 0g)"
+        ),
+
+        // === 21/10/2026 (2,635 kcal | 115P / 273C / 123F | Sugar 91.5g | Na 4,680mg) ===
+        NutritionEntryEntity(
+            date = "2026-10-21",
+            mealType = "มื้อเช้า",
+            name = "โจ๊กหมูสับใส่ไข่ลวก 2 ฟอง + ปาท่องโก๋",
+            calories = 615,
+            proteinG = 26.0,
+            carbsG = 68.0,
+            fatG = 26.0,
+            sodiumMg = 1180,
+            note = "มื้อเช้าวันพักซ้อม"
+        ),
+        NutritionEntryEntity(
+            date = "2026-10-21",
+            mealType = "มื้อกลางวัน",
+            name = "ข้าวขาหมูเนื้อหนังพิเศษ + ไข่พะโล้",
+            calories = 890,
+            proteinG = 38.0,
+            carbsG = 78.0,
+            fatG = 46.0,
+            sodiumMg = 1650,
+            note = "ไขมันและโซเดียมจากน้ำพะโล้"
+        ),
+        NutritionEntryEntity(
+            date = "2026-10-21",
+            mealType = "มื้อว่าง",
+            name = "ชานมไข่มุก + ขนมปังเนยสด",
+            calories = 540,
+            proteinG = 9.0,
+            carbsG = 82.0,
+            fatG = 19.0,
+            sodiumMg = 450,
+            note = "น้ำตาลสูง (รวมน้ำตาล 91.5g ของวัน)"
+        ),
+        NutritionEntryEntity(
+            date = "2026-10-21",
+            mealType = "มื้อเย็น",
+            name = "ผัดไทยกุ้งสดห่อไข่พิเศษ",
+            calories = 590,
+            proteinG = 42.0,
+            carbsG = 45.0,
+            fatG = 32.0,
+            sodiumMg = 1400,
+            note = "ซอสผัดไทยโซเดียมสูง"
+        ),
+
+        // === 20/10/2026 (2,380 kcal | 136P / 261.5C / 80.8F | Sugar 51g | Na 5,071mg | Strength 189 kcal) ===
+        NutritionEntryEntity(
+            date = "2026-10-20",
+            mealType = "มื้อเช้า",
+            name = "ข้าวต้มปลาเก๋า + ไข่ลวก 2 ฟอง",
+            calories = 490,
+            proteinG = 36.0,
+            carbsG = 54.0,
+            fatG = 14.0,
+            sodiumMg = 1120,
+            note = "มื้อเช้าก่อนซ้อม Strength Training"
+        ),
+        NutritionEntryEntity(
+            date = "2026-10-20",
+            mealType = "มื้อกลางวัน",
+            name = "ข้าวกะเพราเนื้อโคขุนสับ + ไข่ดาว + ต้มจืด",
+            calories = 780,
+            proteinG = 42.0,
+            carbsG = 72.5,
+            fatG = 34.8,
+            sodiumMg = 1851,
+            note = "โซเดียมสูงจากซอสผัดและน้ำซุป"
+        ),
+        NutritionEntryEntity(
+            date = "2026-10-20",
+            mealType = "มื้อว่างหลังซ้อม",
+            name = "เวย์โปรตีน 1.5 สกู๊ป + กล้วยหอม + กาแฟเย็น",
+            calories = 420,
+            proteinG = 30.0,
+            carbsG = 55.0,
+            fatG = 8.0,
+            sodiumMg = 300,
+            note = "เติมโปรตีนหลังยกเวท"
+        ),
+        NutritionEntryEntity(
+            date = "2026-10-20",
+            mealType = "มื้อเย็น",
+            name = "ส้มตำไทย + ไก่ย่างครึ่งตัว + ข้าวเหนียว",
+            calories = 690,
+            proteinG = 28.0,
+            carbsG = 80.0,
+            fatG = 24.0,
+            sodiumMg = 1800,
+            note = "โซเดียมจากน้ำปลาร้า/น้ำปลาส้มตำ"
+        ),
+
+        // === 19/10/2026 (2,490 kcal | 106.5P / 278.5C / 101.5F | Sugar 46g | Na 4,190mg | Aerobics+Strength 514 kcal) ===
+        NutritionEntryEntity(
+            date = "2026-10-19",
+            mealType = "มื้อเช้า",
+            name = "แซนด์วิชอกไก่ไข่ดาว + นมโปรตีนสูง",
+            calories = 580,
+            proteinG = 36.5,
+            carbsG = 58.5,
+            fatG = 21.5,
+            sodiumMg = 890,
+            note = "เติมพลังก่อนซ้อม Aerobics + Strength 514 kcal"
+        ),
+        NutritionEntryEntity(
+            date = "2026-10-19",
+            mealType = "มื้อกลางวัน",
+            name = "ข้าวหมูแดงหมูกรอบพิเศษ + บะหมี่เกี๊ยว",
+            calories = 960,
+            proteinG = 38.0,
+            carbsG = 112.0,
+            fatG = 42.0,
+            sodiumMg = 1750,
+            note = "รวมน้ำราดหมูแดงและซุป"
+        ),
+        NutritionEntryEntity(
+            date = "2026-10-19",
+            mealType = "มื้อเย็น",
+            name = "ชาบูน้ำดำหมูสันนอก + ผักรวม + วุ้นเส้น",
+            calories = 950,
+            proteinG = 32.0,
+            carbsG = 108.0,
+            fatG = 38.0,
+            sodiumMg = 1550,
+            note = "มื้อฟื้นฟูหลังซ้อมหนัก"
+        ),
+
+        // === 18/10/2026 (2,420 kcal | 103P / 242C / 113F | Sugar 0g | Na 3,640mg) ===
+        NutritionEntryEntity(
+            date = "2026-10-18",
+            mealType = "มื้อเช้า",
+            name = "ไข่กระทะทรงเครื่อง + ขนมปังปิ้ง + กาแฟดำ",
+            calories = 590,
+            proteinG = 26.0,
+            carbsG = 52.0,
             fatG = 31.0,
-            sodiumMg = 900
+            sodiumMg = 880,
+            note = "ไม่ใส่น้ำตาล (Sugar 0g)"
+        ),
+        NutritionEntryEntity(
+            date = "2026-10-18",
+            mealType = "มื้อกลางวัน",
+            name = "ข้าวหน้าเป็ดย่างหนังกรอบ + คะน้าน้ำมันหอย",
+            calories = 920,
+            proteinG = 41.0,
+            carbsG = 96.0,
+            fatG = 42.0,
+            sodiumMg = 1420,
+            note = "น้ำราดเป็ดย่างและน้ำมันหอย"
+        ),
+        NutritionEntryEntity(
+            date = "2026-10-18",
+            mealType = "มื้อเย็น",
+            name = "ปลากะพงทอดน้ำปลา + ต้มยำกุ้งน้ำข้น + ข้าวสวย",
+            calories = 910,
+            proteinG = 36.0,
+            carbsG = 94.0,
+            fatG = 40.0,
+            sodiumMg = 1340,
+            note = "มื้อเย็นวันพักซ้อม"
+        ),
+
+        // === 17/10/2026 (3,380 kcal | 104P / 522C / 98F | Sugar 5g | Na 3,520mg | Outdoor Run 604 kcal) ===
+        NutritionEntryEntity(
+            date = "2026-10-17",
+            mealType = "มื้อเช้า",
+            name = "ข้าวต้มหมูสับ + กล้วยหอม 2 ลูก + เกลือแร่",
+            calories = 780,
+            proteinG = 24.0,
+            carbsG = 142.0,
+            fatG = 12.0,
+            sodiumMg = 820,
+            note = "โหลดคาร์บก่อนวิ่ง Outdoor Run 604 kcal"
+        ),
+        NutritionEntryEntity(
+            date = "2026-10-17",
+            mealType = "มื้อกลางวัน",
+            name = "พาสต้าซีฟู้ดผัดขี้เมา + ข้าวผัดปูจานใหญ่",
+            calories = 1350,
+            proteinG = 42.0,
+            carbsG = 210.0,
+            fatG = 38.0,
+            sodiumMg = 1450,
+            note = "เติมไกลโคเจนหลังวิ่งยาว"
+        ),
+        NutritionEntryEntity(
+            date = "2026-10-17",
+            mealType = "มื้อเย็น",
+            name = "ชุดเนื้อย่างยากินิกุ + ข้าวญี่ปุ่น 2 ถ้วย",
+            calories = 1250,
+            proteinG = 38.0,
+            carbsG = 170.0,
+            fatG = 48.0,
+            sodiumMg = 1250,
+            note = "มื้อเย็นชดเชยพลังงานหลังวิ่ง Outdoor Run"
+        )
+    )
+
+    val initialGymExercises = listOf(
+        // P-01: Tomorrow's Recommended Session (Pilates / Core APT + Upper Push)
+        MicrocycleWorkoutEntity(
+            dayCode = "P-01",
+            dayName = "Tomorrow (24/10)",
+            sessionTitle = "Upper Push + Pelvis APT Reset & Zone 2",
+            exerciseName = "Incline Dumbbell Press",
+            setsReps = "4 Sets × 8-10 Reps",
+            topWeightKg = 30.0,
+            targetRpe = 8.0,
+            restSeconds = 90,
+            completedSets = 0,
+            totalSets = 4,
+            isCompleted = false
+        ),
+        MicrocycleWorkoutEntity(
+            dayCode = "P-01",
+            dayName = "Tomorrow (24/10)",
+            sessionTitle = "Upper Push + Pelvis APT Reset & Zone 2",
+            exerciseName = "Dead Bug Core Pelvis Lock (แก้ APT 11.7cm)",
+            setsReps = "3 Sets × 12 Reps/side",
+            topWeightKg = 0.0,
+            targetRpe = 7.5,
+            restSeconds = 60,
+            completedSets = 0,
+            totalSets = 3,
+            isCompleted = false
+        ),
+        MicrocycleWorkoutEntity(
+            dayCode = "P-01",
+            dayName = "Tomorrow (24/10)",
+            sessionTitle = "Upper Push + Pelvis APT Reset & Zone 2",
+            exerciseName = "Zone 2 Incline Walk / Run (เผาผลาญไขมัน)",
+            setsReps = "1 Session × 35 Min",
+            topWeightKg = 0.0,
+            targetRpe = 7.0,
+            restSeconds = 0,
+            completedSets = 0,
+            totalSets = 1,
+            isCompleted = false
+        ),
+        // P-02: Upper Pull & Rear Delt
+        MicrocycleWorkoutEntity(
+            dayCode = "P-02",
+            dayName = "Day 2",
+            sessionTitle = "Upper Pull & Posture Alignment",
+            exerciseName = "Wide-Grip Lat Pulldown",
+            setsReps = "4 Sets × 10 Reps",
+            topWeightKg = 65.0,
+            targetRpe = 8.5,
+            restSeconds = 90,
+            completedSets = 4,
+            totalSets = 4,
+            isCompleted = true
+        ),
+        MicrocycleWorkoutEntity(
+            dayCode = "P-02",
+            dayName = "Day 2",
+            sessionTitle = "Upper Pull & Posture Alignment",
+            exerciseName = "Chest-Supported Row",
+            setsReps = "3 Sets × 10 Reps",
+            topWeightKg = 55.0,
+            targetRpe = 8.0,
+            restSeconds = 90,
+            completedSets = 3,
+            totalSets = 3,
+            isCompleted = true
+        ),
+        // P-03: Lower Body & Pelvic Tilt Correction
+        MicrocycleWorkoutEntity(
+            dayCode = "P-03",
+            dayName = "Day 3",
+            sessionTitle = "Heavy Leg Day & APT Glute Drive",
+            exerciseName = "Romanian Deadlift (Hamstring/Glute)",
+            setsReps = "4 Sets × 8 Reps",
+            topWeightKg = 100.0,
+            targetRpe = 8.5,
+            restSeconds = 120,
+            completedSets = 4,
+            totalSets = 4,
+            isCompleted = true
+        ),
+        MicrocycleWorkoutEntity(
+            dayCode = "P-03",
+            dayName = "Day 3",
+            sessionTitle = "Heavy Leg Day & APT Glute Drive",
+            exerciseName = "Barbell Hip Thrust (Pelvis Posterior Tilt)",
+            setsReps = "4 Sets × 10 Reps",
+            topWeightKg = 110.0,
+            targetRpe = 8.5,
+            restSeconds = 90,
+            completedSets = 3,
+            totalSets = 4,
+            isCompleted = false
+        ),
+        // P-04: Pilates Reformer (22/10 Session)
+        MicrocycleWorkoutEntity(
+            dayCode = "P-04",
+            dayName = "Pilates",
+            sessionTitle = "Pilates Reformer & Hip Flexor Release (218 kcal)",
+            exerciseName = "90/90 Posterior Pelvic Tilt Breathing",
+            setsReps = "3 Sets × 60 Sec",
+            topWeightKg = 0.0,
+            targetRpe = 6.5,
+            restSeconds = 45,
+            completedSets = 3,
+            totalSets = 3,
+            isCompleted = true
+        ),
+        // P-05: Strength Training (20/10 Session)
+        MicrocycleWorkoutEntity(
+            dayCode = "P-05",
+            dayName = "Strength",
+            sessionTitle = "Full Body Strength Training (189 kcal)",
+            exerciseName = "Weighted Pull-Ups & Dumbbell Press",
+            setsReps = "4 Sets × 8 Reps",
+            topWeightKg = 10.0,
+            targetRpe = 8.5,
+            restSeconds = 90,
+            completedSets = 4,
+            totalSets = 4,
+            isCompleted = true
+        ),
+        // P-06: Outdoor Run (17/10 Session)
+        MicrocycleWorkoutEntity(
+            dayCode = "P-06",
+            dayName = "Run",
+            sessionTitle = "Outdoor Endurance Run (604 kcal)",
+            exerciseName = "Outdoor Run Zone 2-3 (172+ spm Cadence)",
+            setsReps = "1 Session × 55 Min",
+            topWeightKg = 0.0,
+            targetRpe = 7.5,
+            restSeconds = 0,
+            completedSets = 1,
+            totalSets = 1,
+            isCompleted = true
+        ),
+        // P-07: Full Recovery & Mobility
+        MicrocycleWorkoutEntity(
+            dayCode = "P-07",
+            dayName = "Rest",
+            sessionTitle = "Rest Day & Sodium Flush Mobility",
+            exerciseName = "Thoracic Spine Extension + Glute Activation",
+            setsReps = "2 Sets × 10 Min",
+            topWeightKg = 0.0,
+            targetRpe = 5.5,
+            restSeconds = 30,
+            completedSets = 2,
+            totalSets = 2,
+            isCompleted = true
         )
     )
 
     val initialWorkouts = listOf(
         WorkoutEntity(
-            date = "2026-10-18",
-            title = "พัก (Active Recovery)",
-            category = "Rest",
-            activeKcal = 0,
-            durationMin = 0,
+            date = "2026-10-22",
+            type = "Pilates",
+            title = "Pilates Core & Pelvic Tilt Reset",
             distanceKm = 0.0,
-            avgHr = 65,
+            durationMin = 50,
+            activeBurnKcal = 218,
+            avgHr = 118,
             elevationDPlus = 0,
             cadence = 0,
-            gctMs = 0,
-            notes = "พักเต็มวัน ฟื้นฟูกล้ามเนื้อและข้อต่อ"
+            gctMs = 0
+        ),
+        WorkoutEntity(
+            date = "2026-10-20",
+            type = "Strength Training",
+            title = "Strength Training Hypertrophy",
+            distanceKm = 0.0,
+            durationMin = 45,
+            activeBurnKcal = 189,
+            avgHr = 126,
+            elevationDPlus = 0,
+            cadence = 0,
+            gctMs = 0
+        ),
+        WorkoutEntity(
+            date = "2026-10-19",
+            type = "Aerobics + Strength",
+            title = "Aerobics + Strength Training",
+            distanceKm = 4.2,
+            durationMin = 65,
+            activeBurnKcal = 514,
+            avgHr = 148,
+            elevationDPlus = 40,
+            cadence = 168,
+            gctMs = 225
         ),
         WorkoutEntity(
             date = "2026-10-17",
-            title = "Outdoor Run (Bang Phra)",
-            category = "Outdoor Run",
-            activeKcal = 604,
+            type = "Outdoor Run",
+            title = "Outdoor Run Endurance Session",
+            distanceKm = 9.5,
             durationMin = 58,
-            distanceKm = 9.8,
-            avgHr = 152,
-            elevationDPlus = 140,
-            cadence = 172,
-            gctMs = 218,
-            notes = "Outdoor Run วิ่งคุมโซน แซนดัลคาร์บอนกระชับดี"
-        ),
-        WorkoutEntity(
-            date = "2026-10-16",
-            title = "Trail / Outdoor Run (Khao Chalak)",
-            category = "Trail Run",
-            activeKcal = 1461,
-            durationMin = 135,
-            distanceKm = 18.6,
-            avgHr = 158,
-            elevationDPlus = 680,
-            cadence = 166,
-            gctMs = 224,
-            notes = "Trail เขาฉลากทางเทคนิค เผาผลาญเต็มเหนี่ยว 1461 kcal ไม่มีอาการ Shin Splints"
-        ),
-        WorkoutEntity(
-            date = "2026-10-15",
-            title = "Outdoor run + Pilates",
-            category = "Pilates & Run",
-            activeKcal = 428,
-            durationMin = 65,
-            distanceKm = 5.2,
-            avgHr = 124,
-            elevationDPlus = 45,
-            cadence = 168,
-            gctMs = 216,
-            notes = "Reformer Pilates จัดแนวกระดูกเชิงกราน APT ลดเหลือ 11.7cm"
-        ),
-        WorkoutEntity(
-            date = "2026-10-08",
-            title = "HIIT + Yoga",
-            category = "HIIT",
-            activeKcal = 773,
-            durationMin = 75,
-            distanceKm = 0.0,
-            avgHr = 148,
-            elevationDPlus = 0,
-            cadence = 0,
-            gctMs = 0,
-            notes = "HIIT interval training + ยืดเหยียดโยคะ"
-        ),
-        WorkoutEntity(
-            date = "2026-10-07",
-            title = "Trail / Outdoor Run",
-            category = "Trail Run",
-            activeKcal = 691,
-            durationMin = 68,
-            distanceKm = 11.2,
-            avgHr = 155,
-            elevationDPlus = 320,
-            cadence = 170,
-            gctMs = 220,
-            notes = "ซ้อมเทรลไต่ความชัน"
-        ),
-        WorkoutEntity(
-            date = "2026-10-06",
-            title = "Strength (Leg Day & Tibialis)",
-            category = "Strength",
-            activeKcal = 370,
-            durationMin = 50,
-            distanceKm = 0.0,
-            avgHr = 132,
-            elevationDPlus = 0,
-            cadence = 0,
-            gctMs = 0,
-            notes = "สควอทและฝึก Tibialis ป้องกันหน้าแข้ง"
+            activeBurnKcal = 604,
+            avgHr = 154,
+            elevationDPlus = 120,
+            cadence = 173,
+            gctMs = 218
         )
     )
 
     val initialBodyComp = listOf(
         BodyCompEntity(
+            date = "2026-10-23",
+            sourceDevice = "Evolt 360",
+            weightKg = 74.5,
+            bodyFatPct = 22.1,
+            smmKg = 32.2,
+            waterPct = 56.4,
+            aptCm = 11.7,
+            visceralFat = 6
+        ),
+        BodyCompEntity(
             date = "2026-10-18",
-            source = "Visbody 3D",
+            sourceDevice = "Visbody 3D",
             weightKg = 74.6,
             bodyFatPct = 35.4,
             smmKg = 26.7,
-            waterPct = 52.4,
-            bmrKcal = 1608,
-            visceralFat = 7,
+            waterPct = 55.2,
             aptCm = 11.7,
-            shoulderImbalanceDeg = 1.2
-        ),
-        BodyCompEntity(
-            date = "2026-10-17",
-            source = "Huawei Scale",
-            weightKg = 74.8,
-            bodyFatPct = 35.6,
-            smmKg = 26.6,
-            waterPct = 52.3,
-            bmrKcal = 1608,
-            visceralFat = 7,
-            aptCm = 11.7,
-            shoulderImbalanceDeg = 1.3
-        ),
-        BodyCompEntity(
-            date = "2026-10-16",
-            source = "Huawei Scale",
-            weightKg = 74.7,
-            bodyFatPct = 35.5,
-            smmKg = 26.6,
-            waterPct = 52.5,
-            bmrKcal = 1608,
-            visceralFat = 7,
-            aptCm = 11.8,
-            shoulderImbalanceDeg = 1.3
-        ),
-        BodyCompEntity(
-            date = "2026-10-15",
-            source = "Visbody 3D",
-            weightKg = 74.9,
-            bodyFatPct = 35.7,
-            smmKg = 26.8,
-            waterPct = 52.6,
-            bmrKcal = 1608,
-            visceralFat = 7,
-            aptCm = 11.8,
-            shoulderImbalanceDeg = 1.4
-        ),
-        BodyCompEntity(
-            date = "2026-10-08",
-            source = "Evolt 360",
-            weightKg = 75.1,
-            bodyFatPct = 35.9,
-            smmKg = 26.5,
-            waterPct = 52.1,
-            bmrKcal = 1608,
-            visceralFat = 8,
-            aptCm = 12.0,
-            shoulderImbalanceDeg = 1.5
-        ),
-        BodyCompEntity(
-            date = "2026-10-07",
-            source = "Visbody 3D",
-            weightKg = 75.3,
-            bodyFatPct = 36.1,
-            smmKg = 26.5,
-            waterPct = 52.0,
-            bmrKcal = 1608,
-            visceralFat = 8,
-            aptCm = 12.1,
-            shoulderImbalanceDeg = 1.6
-        ),
-        BodyCompEntity(
-            date = "2026-10-06",
-            source = "Evolt 360",
-            weightKg = 75.4,
-            bodyFatPct = 36.2,
-            smmKg = 26.4,
-            waterPct = 51.9,
-            bmrKcal = 1608,
-            visceralFat = 8,
-            aptCm = 12.2,
-            shoulderImbalanceDeg = 1.6
+            visceralFat = 7
         )
     )
 
     val initialSleep = listOf(
         SleepEntity(
-            date = "2026-10-18",
-            durationHours = 7.6,
-            score = 84,
-            deepSleepPct = 22,
-            avgHr = 49,
+            date = "2026-10-23",
+            durationHours = 7.8,
+            sleepScore = 88,
+            deepSleepPct = 24,
+            avgHr = 48,
             avgHrvMs = 84
         ),
         SleepEntity(
-            date = "2026-10-17",
-            durationHours = 7.2,
-            score = 81,
-            deepSleepPct = 19,
-            avgHr = 52,
-            avgHrvMs = 78
-        ),
-        SleepEntity(
-            date = "2026-10-16",
-            durationHours = 6.8,
-            score = 79,
-            deepSleepPct = 18,
-            avgHr = 54,
-            avgHrvMs = 75
-        ),
-        SleepEntity(
-            date = "2026-10-15",
-            durationHours = 8.2,
-            score = 90,
-            deepSleepPct = 26,
-            avgHr = 47,
-            avgHrvMs = 91
-        ),
-        SleepEntity(
-            date = "2026-10-08",
-            durationHours = 7.5,
-            score = 85,
+            date = "2026-10-22",
+            durationHours = 7.6,
+            sleepScore = 87,
             deepSleepPct = 23,
-            avgHr = 50,
-            avgHrvMs = 82
-        ),
-        SleepEntity(
-            date = "2026-10-07",
-            durationHours = 7.1,
-            score = 78,
-            deepSleepPct = 17,
-            avgHr = 53,
-            avgHrvMs = 74
-        ),
-        SleepEntity(
-            date = "2026-10-06",
-            durationHours = 7.4,
-            score = 82,
-            deepSleepPct = 20,
-            avgHr = 51,
-            avgHrvMs = 80
+            avgHr = 49,
+            avgHrvMs = 83
         )
-    )
-
-    val initialGymExercises = listOf(
-        // P-01 Sunday
-        GymExerciseEntity(
-            dayCode = "P-01",
-            dayName = "Sunday",
-            sessionTitle = "Active Recovery & Mobility",
-            exerciseName = "Hip Flexor Couch Stretch & Glute Activation",
-            warmUpSets = "Bodyweight 2 x 60s per side",
-            workingSets = "3 x 90s isometric hold",
-            topWeightKg = 0.0,
-            completedSets = 3,
-            totalSets = 3,
-            coachCue = "Tuck pelvis under (posterior pelvic tilt) to unload lumbar spine.",
-            isCompleted = true
-        ),
-        GymExerciseEntity(
-            dayCode = "P-01",
-            dayName = "Sunday",
-            sessionTitle = "Active Recovery & Mobility",
-            exerciseName = "Thoracic Spine Foam Rolling & 90/90 Breathing",
-            warmUpSets = "1 x 5 min flow",
-            workingSets = "3 sets x 10 deep diaphragmatic breaths",
-            topWeightKg = 0.0,
-            completedSets = 3,
-            totalSets = 3,
-            coachCue = "Full exhalation down to empty ribcage, expanding lower back.",
-            isCompleted = true
-        ),
-
-        // P-02 Monday
-        GymExerciseEntity(
-            dayCode = "P-02",
-            dayName = "Monday",
-            sessionTitle = "Reformer Pilates for APT",
-            exerciseName = "Footwork on Reformer (V-Position & Parallel)",
-            warmUpSets = "2 Red Springs x 15 reps",
-            workingSets = "3 Red + 1 Blue Springs x 20 reps",
-            topWeightKg = 0.0,
-            completedSets = 4,
-            totalSets = 4,
-            coachCue = "Keep sacrum heavy on carriage. Avoid overarching lower back.",
-            isCompleted = true
-        ),
-        GymExerciseEntity(
-            dayCode = "P-02",
-            dayName = "Monday",
-            sessionTitle = "Reformer Pilates for APT",
-            exerciseName = "Pelvic Curl & Hamstring Pullbacks",
-            warmUpSets = "2 Red Springs x 10 reps",
-            workingSets = "2 Red + 1 Green Springs x 12 reps (4 sets)",
-            topWeightKg = 0.0,
-            completedSets = 4,
-            totalSets = 4,
-            coachCue = "Initiate movement by scooping abs and driving from hamstrings/glutes.",
-            isCompleted = true
-        ),
-
-        // P-03 Tuesday
-        GymExerciseEntity(
-            dayCode = "P-03",
-            dayName = "Tuesday",
-            sessionTitle = "Heavy Leg Day & Shin Protection",
-            exerciseName = "Barbell Back Squat (Warm-up to Top Set)",
-            warmUpSets = "11kg x 10, 41kg x 8, 61kg x 5, 71kg x 3",
-            workingSets = "Top Set: 121kg x 5 reps (RPE 8.5) + Back-off 95kg 3x8",
-            topWeightKg = 121.0,
-            completedSets = 5,
-            totalSets = 5,
-            coachCue = "Root tripod foot into floor, brace 360° core, break hips and knees together.",
-            isCompleted = true
-        ),
-        GymExerciseEntity(
-            dayCode = "P-03",
-            dayName = "Tuesday",
-            sessionTitle = "Heavy Leg Day & Shin Protection",
-            exerciseName = "Heavy 45° Leg Press (Includes 75.2kg Sled)",
-            warmUpSets = "175.2kg x 12, 275.2kg x 10",
-            workingSets = "Top Set: 375.2kg x 8 reps (300kg plates + 75.2kg sled) x 3 sets",
-            topWeightKg = 375.2,
-            completedSets = 3,
-            totalSets = 3,
-            coachCue = "Do not lock knees at apex. Keep tailbone glued to pad.",
-            isCompleted = true
-        ),
-        GymExerciseEntity(
-            dayCode = "P-03",
-            dayName = "Tuesday",
-            sessionTitle = "Heavy Leg Day & Shin Protection",
-            exerciseName = "Tibialis Anterior DB Wall Raises (Shin Splint Prehab)",
-            warmUpSets = "Bodyweight x 25 reps",
-            workingSets = "Dumbbell 12kg strapped x 20 reps x 4 sets",
-            topWeightKg = 12.0,
-            completedSets = 4,
-            totalSets = 4,
-            coachCue = "Dorsiflex toes all the way up, hold 1s at top for trail running deceleration resilience.",
-            isCompleted = true
-        ),
-        GymExerciseEntity(
-            dayCode = "P-03",
-            dayName = "Tuesday",
-            sessionTitle = "Heavy Leg Day & Shin Protection",
-            exerciseName = "Single-Leg Eccentric Calf Raises (Soleus & Achilles)",
-            warmUpSets = "Bodyweight x 15 reps",
-            workingSets = "24kg Kettlebell x 15 reps each leg (3s slow eccentric) x 3 sets",
-            topWeightKg = 24.0,
-            completedSets = 3,
-            totalSets = 3,
-            coachCue = "Drop heel deep past the edge of the block for Achilles elasticity.",
-            isCompleted = true
-        ),
-
-        // P-04 Wednesday
-        GymExerciseEntity(
-            dayCode = "P-04",
-            dayName = "Wednesday",
-            sessionTitle = "Upper Body Hypertrophy @ Jetts",
-            exerciseName = "Incline Dumbbell Chest Press",
-            warmUpSets = "20kg x 12, 28kg x 8",
-            workingSets = "36kg Dumbbells x 8 reps x 4 sets",
-            topWeightKg = 36.0,
-            completedSets = 4,
-            totalSets = 4,
-            coachCue = "Retract scapulae, 30° incline bench, control descent 2s.",
-            isCompleted = true
-        ),
-        GymExerciseEntity(
-            dayCode = "P-04",
-            dayName = "Wednesday",
-            sessionTitle = "Upper Body Hypertrophy @ Jetts",
-            exerciseName = "Seated Neutral-Grip Cable Rows",
-            warmUpSets = "50kg x 12",
-            workingSets = "75kg x 10 reps x 4 sets",
-            topWeightKg = 75.0,
-            completedSets = 4,
-            totalSets = 4,
-            coachCue = "Pull elbows to waist, squeeze lower lats, no torso swinging.",
-            isCompleted = true
-        ),
-
-        // P-05 Thursday
-        GymExerciseEntity(
-            dayCode = "P-05",
-            dayName = "Thursday",
-            sessionTitle = "Speed / Tempo Intervals",
-            exerciseName = "400m Track Repeats @ 3:55/km Pace",
-            warmUpSets = "1.5km Jog + Dynamic Drills (High Knees, A-Skips)",
-            workingSets = "8 x 400m repeats with 90s slow jog recovery",
-            topWeightKg = 0.0,
-            completedSets = 8,
-            totalSets = 8,
-            coachCue = "Maintain cadence at 180 spm, relaxed shoulders, midfoot ground strike.",
-            isCompleted = false
-        ),
-
-        // P-06 Friday
-        GymExerciseEntity(
-            dayCode = "P-06",
-            dayName = "Friday",
-            sessionTitle = "Zone 2 Easy Aerobic Flush Run",
-            exerciseName = "Easy Road/Park Continuous Run",
-            warmUpSets = "500m Walk & Ankle Rotations",
-            workingSets = "6.0 km @ 5:50/km pace (HR cap: 138 bpm)",
-            topWeightKg = 0.0,
-            completedSets = 1,
-            totalSets = 1,
-            coachCue = "Nasal breathing test: should be able to hold conversation without gasping.",
-            isCompleted = false
-        ),
-
-        // P-07 Saturday
-        GymExerciseEntity(
-            dayCode = "P-07",
-            dayName = "Saturday",
-            sessionTitle = "Long Trail Run Bang Phra / Khao Chalak",
-            exerciseName = "Khao Chalak Elevation Loop",
-            warmUpSets = "Glute Bands + Ankle Stretches (10 min)",
-            workingSets = "16.0 km trail loop (650m D+ elevation climb)",
-            topWeightKg = 0.0,
-            completedSets = 1,
-            totalSets = 1,
-            coachCue = "Short strides on technical descents, hands on knees for steep uphill power hike.",
-            isCompleted = false
-        )
-    )
-
-    val initialSettings = listOf(
-        SettingEntity("gas_webhook_url", HealthConstants.DEFAULT_GAS_URL),
-        SettingEntity("auto_sync_enabled", "true"),
-        SettingEntity("theme_mode", "crystal_dark")
     )
 }

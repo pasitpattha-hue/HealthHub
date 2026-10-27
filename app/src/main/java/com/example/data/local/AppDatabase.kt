@@ -15,13 +15,19 @@ import androidx.room.RoomDatabase
         SleepEntity::class,
         SettingEntity::class
     ],
-    version = 3,
+    version = 5,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
+
+    abstract fun dailyLogDao(): DailyLogDao
+    abstract fun nutritionDao(): NutritionDao
+    abstract fun workoutDao(): WorkoutDao
     abstract fun healthDao(): HealthDao
 
     companion object {
+        const val DATABASE_NAME = "healthhub_database.db"
+
         @Volatile
         private var INSTANCE: AppDatabase? = null
 
@@ -30,13 +36,22 @@ abstract class AppDatabase : RoomDatabase() {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     AppDatabase::class.java,
-                    "healthhub_database.db"
+                    DATABASE_NAME
                 )
                     .fallbackToDestructiveMigration(dropAllTables = true)
                     .build()
                 INSTANCE = instance
                 instance
             }
+        }
+
+        fun buildInMemory(context: Context): AppDatabase {
+            return Room.inMemoryDatabaseBuilder(
+                context.applicationContext,
+                AppDatabase::class.java
+            )
+                .allowMainThreadQueries()
+                .build()
         }
     }
 }

@@ -1,18 +1,29 @@
-*.iml
-.gradle
-.kotlin
-/local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
-.DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
+# Gradle & Kotlin build caches
+.gradle/
+.kotlin/
+.build-outputs/
+build/
+app/build/
+
+# Local configuration & secrets (never commit live API keys)
 local.properties
 .env
+.github/workflows/
+
+# Android Studio / IntelliJ IDEA
+*.iml
+.idea/
+.DS_Store
+*.swp
+captures/
+.externalNativeBuild/
+.cxx/
+
+# Generated APKs, AABs & Keystores
+*.apk
+*.ap_
+*.aab
+*.dex
+*.class
 debug.keystore
+my-upload-key.jks

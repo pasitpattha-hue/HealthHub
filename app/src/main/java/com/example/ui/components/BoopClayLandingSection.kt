@@ -45,17 +45,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.ui.theme.ChillaxRoundedDisplayFamily
-import com.example.ui.theme.ClayHighlightLight
 import com.example.ui.theme.ClayLavender
 import com.example.ui.theme.ClayPeach
 import com.example.ui.theme.ClayShadowDark
 import com.example.ui.theme.ClaySurfaceBottom
 import com.example.ui.theme.ClaySurfaceTop
 import com.example.ui.theme.CrystalIce
-import com.example.ui.theme.CrystalIceDark
 import com.example.ui.theme.EmeraldMist
 import com.example.ui.theme.ObsidianDeep
-import com.example.ui.theme.ObsidianNavy
 import com.example.ui.theme.OutfitBodyFamily
 import com.example.ui.theme.SoftCoralRose
 import com.example.ui.theme.SpecularBorder
@@ -128,14 +125,12 @@ fun BoopClayLandingSection(
         modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        // 1. HERO SECTION WITH FLOATING CLAY SHAPES & INTERACTIVE PHONE MOCKUP
         CrystalCard(
             modifier = Modifier.fillMaxWidth(),
             cornerRadius = 32.dp,
             testTag = "boop_hero_card"
         ) {
             Box(modifier = Modifier.fillMaxWidth()) {
-                // Decorative Floating 3D Clay Shapes in Hero Background
                 FloatingClayOrb(
                     baseColor = CrystalIce,
                     sizeDp = 58.dp,
@@ -165,13 +160,13 @@ fun BoopClayLandingSection(
                         .offset(x = 12.dp, y = 40.dp)
                 )
 
-                // Floating Puffy Clay Torus / Ring on Top-Right
                 Canvas(
                     modifier = Modifier
                         .size(64.dp)
                         .align(Alignment.CenterEnd)
                         .offset(x = (-8).dp, y = (-60).dp)
                 ) {
+                    if (size.minDimension <= 0f) return@Canvas
                     drawCircle(
                         brush = Brush.linearGradient(
                             colors = listOf(WarmChampagne, SoftCoralRose)
@@ -192,7 +187,6 @@ fun BoopClayLandingSection(
                         .padding(20.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    // Friendly Clay Pill Tag
                     CrystalPill(
                         text = "🫧 BOOP × HEALTHHUB • DARK CLAY",
                         accentColor = CrystalIce
@@ -200,7 +194,6 @@ fun BoopClayLandingSection(
 
                     Spacer(modifier = Modifier.height(12.dp))
 
-                    // Chillax Rounded Display Hero Title
                     Text(
                         text = "Boop your daily habits into peak performance.",
                         color = TextPrimary,
@@ -225,7 +218,6 @@ fun BoopClayLandingSection(
 
                     Spacer(modifier = Modifier.height(18.dp))
 
-                    // INTERACTIVE 3D CLAY PHONE MOCKUP
                     ClayPhoneMockup(
                         habits = habits,
                         boopedCount = boopedCount,
@@ -242,7 +234,6 @@ fun BoopClayLandingSection(
             }
         }
 
-        // 2. THREE PUFFY CLAY FEATURES SECTION
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -302,7 +293,6 @@ fun BoopClayLandingSection(
             }
         }
 
-        // 3. BRIGHT CTA BAND (Vibrant Dark-Theme Claymorphism Banner)
         BrightClayCtaBand(
             boopedCount = boopedCount,
             totalHabits = habits.size,
@@ -343,12 +333,11 @@ private fun ClayPhoneMockup(
             .drawWithContent {
                 drawContent()
                 val r = 36.dp.toPx()
-                // Puffy 3D phone rim highlight
                 drawRoundRect(
                     brush = Brush.verticalGradient(
                         listOf(Color.White.copy(alpha = 0.35f), Color.Transparent),
                         startY = 0f,
-                        endY = size.height * 0.35f
+                        endY = (size.height * 0.35f).coerceAtLeast(1f)
                     ),
                     cornerRadius = CornerRadius(r, r),
                     style = Stroke(width = 3.dp.toPx())
@@ -365,7 +354,6 @@ private fun ClayPhoneMockup(
                 .padding(14.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Phone Dynamic Island Pill
             Box(
                 modifier = Modifier
                     .width(76.dp)
@@ -397,7 +385,6 @@ private fun ClayPhoneMockup(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Phone Screen Header
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -426,7 +413,6 @@ private fun ClayPhoneMockup(
 
             Spacer(modifier = Modifier.height(10.dp))
 
-            // Interactive Habit Rows inside Phone Mockup
             habits.forEachIndexed { index, habit ->
                 val scale by animateFloatAsState(
                     targetValue = if (habit.isBooped) 1.0f else 0.98f,
@@ -493,7 +479,6 @@ private fun ClayPhoneMockup(
                         }
                     }
 
-                    // Puffy Boop Button Pill
                     Box(
                         modifier = Modifier
                             .clip(RoundedCornerShape(50))
@@ -624,22 +609,20 @@ private fun BrightClayCtaBand(
             .drawWithContent {
                 drawContent()
                 val r = 30.dp.toPx()
-                // Puffy top clay specular cushion
                 drawRoundRect(
                     brush = Brush.verticalGradient(
                         listOf(Color.White.copy(alpha = 0.45f), Color.Transparent),
                         startY = 0f,
-                        endY = size.height * 0.45f
+                        endY = (size.height * 0.45f).coerceAtLeast(1f)
                     ),
                     cornerRadius = CornerRadius(r, r),
                     style = Stroke(width = 3.dp.toPx())
                 )
-                // Puffy bottom clay shadow bevel
                 drawRoundRect(
                     brush = Brush.verticalGradient(
                         listOf(Color.Transparent, ClayShadowDark.copy(alpha = 0.6f)),
                         startY = size.height * 0.55f,
-                        endY = size.height
+                        endY = size.height.coerceAtLeast(1f)
                     ),
                     cornerRadius = CornerRadius(r, r),
                     style = Stroke(width = 3.dp.toPx())
@@ -647,7 +630,6 @@ private fun BrightClayCtaBand(
             }
             .padding(18.dp)
     ) {
-        // Decorative Floating Clay Orb inside the CTA band
         FloatingClayOrb(
             baseColor = ClayPeach,
             sizeDp = 34.dp,

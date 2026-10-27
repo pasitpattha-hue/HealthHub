@@ -1,11 +1,6 @@
 package com.example.ui.components
 
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -23,7 +18,6 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -38,7 +32,6 @@ import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
@@ -52,15 +45,12 @@ import com.example.data.model.EnergyStatus
 import com.example.ui.theme.ChillaxRoundedDisplayFamily
 import com.example.ui.theme.ClayHighlightIce
 import com.example.ui.theme.ClayHighlightLight
-import com.example.ui.theme.ClayLavender
-import com.example.ui.theme.ClayPeach
 import com.example.ui.theme.ClayShadowDark
 import com.example.ui.theme.ClaySurfaceBottom
 import com.example.ui.theme.ClaySurfaceTop
 import com.example.ui.theme.CrystalIce
 import com.example.ui.theme.CrystalIceDark
 import com.example.ui.theme.EmeraldMist
-import com.example.ui.theme.OutfitBodyFamily
 import com.example.ui.theme.SmokedCrystal
 import com.example.ui.theme.SmokedCrystalElevated
 import com.example.ui.theme.SoftCoralRose
@@ -70,11 +60,6 @@ import com.example.ui.theme.TextPrimary
 import com.example.ui.theme.TextSecondary
 import com.example.ui.theme.WarmChampagne
 
-/**
- * Dark Claymorphism Card:
- * Puffy 3D surface gradient, big squircle radii (28.dp default), soft outer elevation,
- * inner top-left specular cushion highlight, and inner bottom-right deep clay shadow bevel.
- */
 @Composable
 fun CrystalCard(
     modifier: Modifier = Modifier,
@@ -108,7 +93,6 @@ fun CrystalCard(
         .drawWithContent {
             drawContent()
             val radiusPx = cornerRadius.toPx()
-            // Puffy inner bottom-right dark clay bevel
             drawRoundRect(
                 brush = Brush.verticalGradient(
                     colors = listOf(
@@ -116,12 +100,11 @@ fun CrystalCard(
                         ClayShadowDark.copy(alpha = 0.55f)
                     ),
                     startY = size.height * 0.5f,
-                    endY = size.height
+                    endY = size.height.coerceAtLeast(1f)
                 ),
                 cornerRadius = CornerRadius(radiusPx, radiusPx),
                 style = Stroke(width = 3.dp.toPx())
             )
-            // Puffy inner top-left clay highlight rim
             drawRoundRect(
                 brush = Brush.linearGradient(
                     colors = listOf(
@@ -130,7 +113,7 @@ fun CrystalCard(
                         Color.Transparent
                     ),
                     start = Offset(0f, 0f),
-                    end = Offset(size.width * 0.7f, size.height * 0.5f)
+                    end = Offset((size.width * 0.7f).coerceAtLeast(1f), (size.height * 0.5f).coerceAtLeast(1f))
                 ),
                 cornerRadius = CornerRadius(radiusPx, radiusPx),
                 style = Stroke(width = 2.dp.toPx())
@@ -260,7 +243,7 @@ fun CrystalButton(
     Box(
         modifier = modifier
             .testTag(testTag)
-            .height(48.dp) // Minimum 48.dp interactive target
+            .height(48.dp)
             .shadow(
                 elevation = if (isPrimary) 10.dp else 6.dp,
                 shape = shape,
@@ -273,12 +256,11 @@ fun CrystalButton(
             .drawWithContent {
                 drawContent()
                 val r = 22.dp.toPx()
-                // Inner top puffy highlight
                 drawRoundRect(
                     brush = Brush.verticalGradient(
                         listOf(ClayHighlightLight, Color.Transparent),
                         startY = 0f,
-                        endY = size.height * 0.45f
+                        endY = (size.height * 0.45f).coerceAtLeast(1f)
                     ),
                     cornerRadius = CornerRadius(r, r),
                     style = Stroke(width = 2.dp.toPx())
@@ -317,10 +299,6 @@ fun CrystalButton(
     }
 }
 
-/**
- * Floating 3D Clay Orb / Pill Canvas Decoration for the Hero & CTA sections.
- * Draws a puffy 3D sphere or capsule with radial specular highlight and deep clay shading.
- */
 @Composable
 fun FloatingClayOrb(
     baseColor: Color,
@@ -328,8 +306,8 @@ fun FloatingClayOrb(
     modifier: Modifier = Modifier
 ) {
     Canvas(modifier = modifier.size(sizeDp)) {
-        val radius = size.minDimension / 2f
-        // Outer soft clay body
+        if (size.minDimension <= 0f) return@Canvas
+        val radius = (size.minDimension / 2f).coerceAtLeast(1f)
         drawCircle(
             brush = Brush.radialGradient(
                 colors = listOf(
@@ -339,11 +317,11 @@ fun FloatingClayOrb(
                     Color(0xFF060A14)
                 ),
                 center = Offset(size.width * 0.32f, size.height * 0.28f),
-                radius = radius * 1.35f
+                radius = (radius * 1.35f).coerceAtLeast(1f)
             ),
             radius = radius
         )
-        // Puffy top-left specular gleam
+        val gleamRadius = (radius * 0.45f).coerceAtLeast(1f)
         drawCircle(
             brush = Brush.radialGradient(
                 colors = listOf(
@@ -351,9 +329,9 @@ fun FloatingClayOrb(
                     Color.Transparent
                 ),
                 center = Offset(size.width * 0.30f, size.height * 0.26f),
-                radius = radius * 0.45f
+                radius = gleamRadius
             ),
-            radius = radius * 0.45f,
+            radius = gleamRadius,
             center = Offset(size.width * 0.30f, size.height * 0.26f)
         )
     }
@@ -362,11 +340,14 @@ fun FloatingClayOrb(
 data class BottomBarItem(
     val title: String,
     val iconEmoji: String,
-    val testTag: String
+    val testTag: String,
+    val route: String = testTag,
+    val selectedIcon: ImageVector? = null,
+    val unselectedIcon: ImageVector? = null
 )
 
 @Composable
-fun CrystalFloatingBottomBar(
+fun BottomNavigationBar(
     selectedIndex: Int,
     onTabSelected: (Int) -> Unit,
     items: List<BottomBarItem>,
@@ -376,12 +357,13 @@ fun CrystalFloatingBottomBar(
         modifier = modifier
             .fillMaxWidth()
             .navigationBarsPadding()
-            .padding(horizontal = 16.dp, vertical = 10.dp),
+            .padding(horizontal = 16.dp, vertical = 10.dp)
+            .testTag("bottom_navigation_bar"),
         contentAlignment = Alignment.Center
     ) {
-        // Puffy Dark Clay Floating Dock with big radii (34.dp)
         Row(
             modifier = Modifier
+                .fillMaxWidth()
                 .shadow(
                     elevation = 18.dp,
                     shape = RoundedCornerShape(34.dp),
@@ -405,7 +387,7 @@ fun CrystalFloatingBottomBar(
                         brush = Brush.verticalGradient(
                             listOf(ClayHighlightLight, Color.Transparent),
                             startY = 0f,
-                            endY = size.height * 0.4f
+                            endY = (size.height * 0.4f).coerceAtLeast(1f)
                         ),
                         cornerRadius = CornerRadius(r, r),
                         style = Stroke(width = 2.dp.toPx())
@@ -428,6 +410,8 @@ fun CrystalFloatingBottomBar(
 
                 Box(
                     modifier = Modifier
+                        .weight(1f)
+                        .padding(horizontal = 2.dp)
                         .testTag(item.testTag)
                         .clip(RoundedCornerShape(24.dp))
                         .background(activeBgColor)
@@ -445,28 +429,63 @@ fun CrystalFloatingBottomBar(
                             indication = ripple(color = CrystalIce),
                             onClick = { onTabSelected(index) }
                         )
-                        .padding(horizontal = 14.dp, vertical = 8.dp),
+                        .padding(horizontal = 8.dp, vertical = 8.dp),
                     contentAlignment = Alignment.Center
                 ) {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
                     ) {
-                        Text(
-                            text = item.iconEmoji,
-                            fontSize = 18.sp
-                        )
-                        Spacer(modifier = Modifier.height(2.dp))
+                        val vectorIcon = if (isSelected) item.selectedIcon else (item.unselectedIcon ?: item.selectedIcon)
+                        if (vectorIcon != null) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(3.dp)
+                            ) {
+                                Icon(
+                                    imageVector = vectorIcon,
+                                    contentDescription = item.title,
+                                    tint = activeTextColor,
+                                    modifier = Modifier.size(18.dp)
+                                )
+                                Text(
+                                    text = item.iconEmoji,
+                                    fontSize = 13.sp
+                                )
+                            }
+                        } else {
+                            Text(
+                                text = item.iconEmoji,
+                                fontSize = 18.sp
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(3.dp))
                         Text(
                             text = item.title,
                             color = activeTextColor,
                             fontFamily = ChillaxRoundedDisplayFamily,
                             fontSize = 11.sp,
-                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium
+                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
+                            maxLines = 1
                         )
                     }
                 }
             }
         }
     }
+}
+
+@Composable
+fun CrystalFloatingBottomBar(
+    selectedIndex: Int,
+    onTabSelected: (Int) -> Unit,
+    items: List<BottomBarItem>,
+    modifier: Modifier = Modifier
+) {
+    BottomNavigationBar(
+        selectedIndex = selectedIndex,
+        onTabSelected = onTabSelected,
+        items = items,
+        modifier = modifier
+    )
 }

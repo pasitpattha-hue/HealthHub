@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">HealthHub</string>
+    <string name="command_title">PASIT HEALTH &amp; PERFORMANCE</string>
+    <string name="command_subtitle">2026_HealthHub • Dark Claymorphism Command</string>
+    <string name="tab_dashboard">Dashboard</string>
+    <string name="tab_ai_logger">AI Logger</string>
+    <string name="tab_nutrition">Nutrition</string>
+    <string name="tab_microcycle">Microcycle</string>
 </resources>
